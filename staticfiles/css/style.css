@@ -1,0 +1,137 @@
+/* General transition for nav links for a smoother hover effect */
+.nav-link {
+    transition: color 0.3s ease-in-out;
+    padding-bottom: 4px; /* Optional: for border-bottom effect */
+    border-bottom: 2px solid transparent; /* Initially transparent border */
+}
+
+/* Style for the currently active navigation link in light mode */
+.nav-link.active {
+    color: #3b82f6; /* Tailwind's blue-500 */
+    font-weight: 600; /* semi-bold */
+    border-bottom-color: #3b82f6;
+}
+
+/* Style for the active nav link in dark mode */
+.dark .nav-link.active {
+    color: #60a5fa; /* Tailwind's blue-400 */
+    border-bottom-color: #60a5fa;
+}
+
+/* ------------------------------------------- */
+/* Styling for Django Form Fields (Browser-Ready) */
+/* ------------------------------------------- */
+
+/* Base styles for all form inputs, textareas, and selects */
+form input[type="text"],
+form input[type="email"],
+form input[type="url"],
+form input[type="password"],
+form input[type="number"],
+form textarea,
+form select {
+    width: 100%;
+    padding: 0.5rem 1rem;
+    border-width: 1px;
+    border-radius: 0.5rem;
+    --tw-shadow: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+    --tw-shadow-colored: 0 1px 2px 0 var(--tw-shadow-color);
+    box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow);
+    
+    /* Light Mode Styles */
+    background-color: rgb(255 255 255);
+    border-color: rgb(209 213 219);
+    color: rgb(17 24 39);
+}
+
+/* Specific styles for file input */
+form input[type="file"] {
+    width: 100%;
+    font-size: 0.875rem; /* text-sm */
+    color: rgb(100 116 139); /* text-slate-500 */
+    
+    /* Modern file input styling */
+    --file-selector-color: #1e40af; /* blue-800 */
+    --file-selector-bg: #dbeafe; /* blue-100 */
+}
+form input[type="file"]::file-selector-button {
+    margin-right: 1rem;
+    padding: 0.5rem 1rem;
+    border-radius: 9999px;
+    border-width: 0px;
+    font-size: 0.875rem;
+    font-weight: 600;
+    background-color: var(--file-selector-bg);
+    color: var(--file-selector-color);
+    transition: background-color 0.2s;
+}
+form input[type="file"]::file-selector-button:hover {
+    background-color: #bfdbfe; /* blue-200 */
+}
+.dark form input[type="file"] {
+    color: rgb(156 163 175); /* dark:text-gray-400 */
+    --file-selector-color: #93c5fd; /* dark:text-blue-300 */
+    --file-selector-bg: #374151; /* dark:bg-gray-700 */
+}
+.dark form input[type="file"]::file-selector-button:hover {
+    background-color: #4b5563; /* dark:hover:bg-gray-600 */
+}
+
+
+/* Dark Mode Styles for other inputs */
+.dark form input[type="text"],
+.dark form input[type="email"],
+.dark form input[type="url"],
+.dark form input[type="password"],
+.dark form input[type="number"],
+.dark form textarea,
+.dark form select {
+    background-color: rgb(55 65 81); /* dark:bg-gray-700 */
+    border-color: rgb(75 85 99); /* dark:border-gray-600 */
+    color: rgb(255 255 255); /* dark:text-white */
+}
+
+/* Focus Ring Styles for all inputs */
+form input:focus,
+form textarea:focus,
+form select:focus {
+    outline: 2px solid transparent;
+    outline-offset: 2px;
+    --tw-ring-color: rgb(59 130 246); /* focus:ring-blue-500 */
+    --tw-ring-offset-shadow: var(--tw-ring-inset) 0 0 0 var(--tw-ring-offset-width) var(--tw-ring-offset-color);
+    --tw-ring-shadow: var(--tw-ring-inset) 0 0 0 calc(2px + var(--tw-ring-offset-width)) var(--tw-ring-color);
+    box-shadow: var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow, 0 0 #0000);
+    border-color: rgb(37 99 235); /* focus:border-blue-600 */
+}
+
+/* Styles for labels, errors, and help text */
+form label {
+    display: block;
+    margin-bottom: 0.25rem;
+    font-size: 0.875rem;
+    line-height: 1.25rem;
+    font-weight: 500;
+    color: rgb(55 65 81);
+}
+.dark form label {
+    color: rgb(209 213 219);
+}
+
+form .errorlist {
+    margin-top: 0.25rem;
+    padding: 0;
+    font-size: 0.875rem;
+    line-height: 1.25rem;
+    color: rgb(239 68 68);
+    list-style-type: none;
+}
+
+form .helptext {
+    margin-top: 0.25rem;
+    font-size: 0.75rem;
+    line-height: 1rem;
+    color: rgb(107 114 128);
+}
+.dark form .helptext {
+    color: rgb(156 163 175);
+}
