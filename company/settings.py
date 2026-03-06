@@ -15,9 +15,9 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-your-secret-key-here'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
-ALLOWED_HOSTS = ["ondrobit.com", "www.ondrobit.com"]
+ALLOWED_HOSTS = ["ondrobit.com", "www.ondrobit.com", "127.0.0.1"]
 
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
