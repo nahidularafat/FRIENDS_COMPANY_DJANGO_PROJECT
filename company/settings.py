@@ -17,8 +17,6 @@ SECRET_KEY = 'django-insecure-your-secret-key-here'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 
-DEBUG = False
-
 ALLOWED_HOSTS = ["ondrobit.com", "www.ondrobit.com"]
 
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
