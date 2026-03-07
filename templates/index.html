@@ -44,7 +44,7 @@
         </div>
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 lg:gap-8">
             {% for service in services|slice:":3" %}
-                <div class="bg-white dark:bg-accent-700 p-6 sm:p-8 rounded-xl shadow-lg text-center hover:shadow-xl transition-shadow duration-300"
+                <div class="service-card bg-white dark:bg-accent-700 p-6 sm:p-8 rounded-xl shadow-lg text-center"
                      data-aos="fade-up" data-aos-delay="{{ forloop.counter0|add:'1' }}00">
                     <div class="inline-flex items-center justify-center w-12 h-12 sm:w-16 sm:h-16 bg-primary-50 dark:bg-primary-900/30 text-primary-500 rounded-full mb-4 sm:mb-6">
                         <i class="{{ service.icon_class }} text-xl sm:text-2xl"></i>
@@ -91,22 +91,22 @@
 
         <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4 sm:gap-6 md:gap-8 lg:gap-10 py-4 sm:py-6 md:py-8">
             {% for client in clients %}
-                <div class="relative group flex justify-center" data-aos="zoom-in" data-aos-delay="{{ forloop.counter0|add:'1' }}00">
+                <div class="relative group" data-aos="zoom-in" data-aos-delay="{{ forloop.counter0|add:'1' }}00">
                     <a href="{{ client.website_url|default:'#' }}" target="_blank" rel="noopener noreferrer"
                        title="{{ client.name }}" class="block p-2 sm:p-4">
-                        <img class="h-8 sm:h-10 md:h-12 w-auto mx-auto opacity-70 group-hover:opacity-100 transition-opacity duration-300 dark:invert dark:opacity-60 dark:group-hover:opacity-100"
+                        <img class="h-8 sm:h-10 md:h-12 client-logo mx-auto"
                              src="{{ client.logo.url }}" alt="{{ client.name }} Logo">
                     </a>
                     {% if user.is_authenticated and user.profile.role == 'SUPERADMIN' %}
                         <div class="absolute -top-8 sm:-top-10 left-1/2 -translate-x-1/2 flex space-x-1 sm:space-x-2
-                                    opacity-0 group-hover:opacity-100 transition-all duration-300 bg-accent-800 p-1 sm:p-2 rounded-lg shadow-lg z-10">
+                                    opacity-0 group-hover:opacity-100 transition-all duration-300 bg-accent-800 p-1 sm:p-2 rounded-lg shadow-lg">
                             <a href="{% url 'client_update' client.pk %}"
-                               class="text-xs bg-primary-500 hover:bg-primary-600 text-white py-1 px-1.5 sm:px-2 rounded-md transition-colors whitespace-nowrap">
-                               <i class="fas fa-edit mr-0.5 sm:mr-1"></i><span class="hidden sm:inline">Edit</span>
+                               class="text-xs bg-primary-500 hover:bg-primary-600 text-white py-1 px-2 sm:px-3 rounded-md transition-colors whitespace-nowrap">
+                               <i class="fas fa-edit mr-1"></i>Edit
                             </a>
                             <a href="{% url 'client_delete' client.pk %}"
-                               class="text-xs bg-red-500 hover:bg-red-600 text-white py-1 px-1.5 sm:px-2 rounded-md transition-colors whitespace-nowrap">
-                               <i class="fas fa-trash mr-0.5 sm:mr-1"></i><span class="hidden sm:inline">Delete</span>
+                               class="text-xs bg-red-500 hover:bg-red-600 text-white py-1 px-2 sm:px-3 rounded-md transition-colors whitespace-nowrap">
+                               <i class="fas fa-trash mr-1"></i>Delete
                             </a>
                         </div>
                     {% endif %}
