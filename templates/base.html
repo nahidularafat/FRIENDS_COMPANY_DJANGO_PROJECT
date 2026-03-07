@@ -38,6 +38,14 @@
                     },
                     fontFamily: {
                         'sans': ['Inter', 'system-ui', 'sans-serif'],
+                    },
+                    screens: {
+                        'xs': '480px',
+                        'sm': '640px',
+                        'md': '768px',
+                        'lg': '1024px',
+                        'xl': '1280px',
+                        '2xl': '1536px',
                     }
                 }
             }
@@ -104,27 +112,118 @@
             background-clip: text;
         }
         
-        /* Mobile menu animation */
-        .mobile-menu-enter {
-            opacity: 0;
-            transform: translateY(-10px);
+        /* Stylish Mobile Menu Button Animation */
+        .menu-btn {
+            width: 40px;
+            height: 40px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border-radius: 12px;
+            background: rgba(14, 165, 233, 0.1);
         }
-        .mobile-menu-enter-active {
+        
+        .menu-btn:hover {
+            background: rgba(14, 165, 233, 0.2);
+        }
+        
+        .menu-btn__line {
+            width: 22px;
+            height: 2px;
+            background-color: #0ea5e9;
+            display: block;
+            margin: 3px 0;
+            transition: all 0.3s ease;
+            border-radius: 10px;
+        }
+        
+        .menu-btn.active .menu-btn__line:nth-child(1) {
+            transform: translateY(8px) rotate(45deg);
+        }
+        
+        .menu-btn.active .menu-btn__line:nth-child(2) {
+            opacity: 0;
+            transform: translateX(-10px);
+        }
+        
+        .menu-btn.active .menu-btn__line:nth-child(3) {
+            transform: translateY(-8px) rotate(-45deg);
+        }
+        
+        .dark .menu-btn {
+            background: rgba(255, 255, 255, 0.1);
+        }
+        
+        .dark .menu-btn:hover {
+            background: rgba(255, 255, 255, 0.15);
+        }
+        
+        .dark .menu-btn__line {
+            background-color: #94a3b8;
+        }
+        
+        /* Mobile menu animation */
+        .mobile-menu {
+            max-height: 0;
+            opacity: 0;
+            overflow: hidden;
+            transition: max-height 0.5s ease, opacity 0.3s ease;
+        }
+        
+        .mobile-menu.open {
+            max-height: 500px;
             opacity: 1;
-            transform: translateY(0);
-            transition: opacity 0.3s ease, transform 0.3s ease;
+        }
+        
+        /* Mobile nav links with icon animation */
+        .mobile-nav-link {
+            display: flex;
+            align-items: center;
+            padding: 0.75rem 1rem;
+            border-radius: 0.75rem;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            min-height: 48px;
+        }
+        
+        .mobile-nav-link i {
+            width: 24px;
+            margin-right: 12px;
+            font-size: 1.1rem;
+            color: #0ea5e9;
+            transition: all 0.3s ease;
+        }
+        
+        .mobile-nav-link:hover {
+            background: rgba(14, 165, 233, 0.1);
+            transform: translateX(5px);
+        }
+        
+        .mobile-nav-link:hover i {
+            transform: scale(1.1);
+        }
+        
+        .dark .mobile-nav-link:hover {
+            background: rgba(14, 165, 233, 0.2);
         }
         
         /* Touch-friendly tap targets */
-        .mobile-nav-link {
+        .touch-target {
             min-height: 44px;
+            min-width: 44px;
             display: flex;
             align-items: center;
+            justify-content: center;
         }
         
         /* Prevent horizontal scroll on mobile */
         body {
             overflow-x: hidden;
+            width: 100%;
         }
 
         /* Mobile optimizations */
@@ -134,9 +233,19 @@
                 padding-right: 1rem;
             }
             h1 {
-                font-size: 2rem;
-                line-height: 1.2;
+                font-size: 1.8rem;
+                line-height: 1.3;
             }
+            h2 {
+                font-size: 1.5rem;
+            }
+        }
+        
+        /* Better touch scrolling for mobile menu */
+        .mobile-menu-container {
+            -webkit-overflow-scrolling: touch;
+            max-height: calc(100vh - 80px);
+            overflow-y: auto;
         }
     </style>
     
@@ -147,35 +256,35 @@
 
     <!-- ===== HEADER ===== -->
     <header class="glass-effect fixed w-full z-50 shadow-sm">
-        <nav class="container mx-auto px-4 sm:px-6 py-3 sm:py-4">
+        <nav class="container mx-auto px-4 sm:px-6 py-3">
             <div class="flex justify-between items-center">
                 
-                <!-- Logo -->
+                <!-- Logo - Responsive -->
                 <a href="{% url 'home' %}" class="flex items-center space-x-2 sm:space-x-3 group">
                     <div class="p-1.5 sm:p-2 bg-primary-500 rounded-lg group-hover:bg-primary-600 transition-colors shadow-md">
                         <img class="w-6 h-6 sm:w-8 sm:h-8" src="{% static 'images/logo.png' %}" alt="IT-SOLUTION Logo">
                     </div>
                     <div>
-                        <span class="text-base sm:text-xl font-bold text-accent-800 dark:text-white block">IT SOLUTION</span>
+                        <span class="text-sm sm:text-base md:text-xl font-bold text-accent-800 dark:text-white block">IT SOLUTION</span>
                         <span class="text-primary-500 font-semibold text-xs sm:text-sm -mt-1 block">IT Solutions</span>
                     </div>
                 </a>
 
-                <!-- Desktop Navbar Links -->
+                <!-- Desktop Navbar Links - Hidden on Mobile -->
                 <div class="hidden md:flex items-center space-x-6 lg:space-x-8 font-medium">
-                    <a href="{% url 'home' %}" class="nav-link {% block home_active %}{% endblock %} text-accent-700 dark:text-accent-200 hover:text-primary-500 font-semibold">Home</a>
-                    <a href="{% url 'services' %}" class="nav-link {% block services_active %}{% endblock %} text-accent-700 dark:text-accent-200 hover:text-primary-500 font-semibold">Services</a>
-                    <a href="{% url 'blog' %}" class="nav-link {% block blog_active %}{% endblock %} text-accent-700 dark:text-accent-200 hover:text-primary-500 font-semibold">Blog</a>
-                    <a href="{% url 'about_us' %}" class="nav-link {% block about_active %}{% endblock %} text-accent-700 dark:text-accent-200 hover:text-primary-500 font-semibold">About Us</a>
-                    <a href="{% url 'review_page' %}" class="nav-link {% block reviews_active %}{% endblock %} text-accent-700 dark:text-accent-200 hover:text-primary-500 font-semibold">Reviews</a>
+                    <a href="{% url 'home' %}" class="nav-link {% block home_active %}{% endblock %} text-accent-700 dark:text-accent-200 hover:text-primary-500 font-semibold text-sm lg:text-base">Home</a>
+                    <a href="{% url 'services' %}" class="nav-link {% block services_active %}{% endblock %} text-accent-700 dark:text-accent-200 hover:text-primary-500 font-semibold text-sm lg:text-base">Services</a>
+                    <a href="{% url 'blog' %}" class="nav-link {% block blog_active %}{% endblock %} text-accent-700 dark:text-accent-200 hover:text-primary-500 font-semibold text-sm lg:text-base">Blog</a>
+                    <a href="{% url 'about_us' %}" class="nav-link {% block about_active %}{% endblock %} text-accent-700 dark:text-accent-200 hover:text-primary-500 font-semibold text-sm lg:text-base">About Us</a>
+                    <a href="{% url 'review_page' %}" class="nav-link {% block reviews_active %}{% endblock %} text-accent-700 dark:text-accent-200 hover:text-primary-500 font-semibold text-sm lg:text-base">Reviews</a>
                 </div>
 
                 <!-- Right side buttons -->
-                <div class="flex items-center space-x-2 sm:space-x-4">
+                <div class="flex items-center space-x-2 sm:space-x-3">
 
-                    <!-- Theme Toggle -->
+                    <!-- Theme Toggle - Responsive -->
                     <button id="theme-toggle" type="button"
-                        class="text-accent-500 dark:text-accent-400 hover:bg-accent-100 dark:hover:bg-accent-800
+                        class="touch-target text-accent-500 dark:text-accent-400 hover:bg-accent-100 dark:hover:bg-accent-800
                         focus:outline-none focus:ring-2 focus:ring-primary-500 rounded-lg p-2 transition-colors">
                         <svg id="theme-toggle-dark-icon" class="hidden w-4 h-4 sm:w-5 sm:h-5" fill="currentColor" viewBox="0 0 20 20">
                             <path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z"></path>
@@ -190,17 +299,17 @@
                         </svg>
                     </button>
 
-                    <!-- Mobile Menu Button (Hamburger) -->
+                    <!-- Stylish Mobile Menu Button -->
                     <button id="mobile-menu-button" type="button"
-                        class="md:hidden text-accent-500 dark:text-accent-400 hover:bg-accent-100 dark:hover:bg-accent-800
-                        focus:outline-none focus:ring-2 focus:ring-primary-500 rounded-lg p-2 transition-colors">
-                        <svg class="w-5 h-5 sm:w-6 sm:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
-                        </svg>
+                        class="md:hidden menu-btn touch-target focus:outline-none focus:ring-2 focus:ring-primary-500"
+                        aria-label="Menu">
+                        <span class="menu-btn__line"></span>
+                        <span class="menu-btn__line"></span>
+                        <span class="menu-btn__line"></span>
                     </button>
 
-                    <!-- Desktop Auth Buttons -->
-                    <div class="hidden md:flex items-center space-x-2 lg:space-x-4">
+                    <!-- Desktop Auth Buttons - Hidden on Mobile -->
+                    <div class="hidden md:flex items-center space-x-2 lg:space-x-3">
                         {% if user.is_authenticated %}
                             {% if user.profile.role == 'SUPERADMIN' %}
                                 <a href="{% url 'dashboard' %}"
@@ -227,42 +336,59 @@
                 </div>
             </div>
 
-            <!-- Mobile Menu Dropdown -->
-            <div id="mobile-menu" class="hidden md:hidden mt-4 py-4 border-t border-accent-200 dark:border-accent-700">
-                <div class="flex flex-col space-y-2">
-                    <a href="{% url 'home' %}" class="mobile-nav-link px-4 py-3 rounded-lg hover:bg-accent-100 dark:hover:bg-accent-800 transition text-accent-700 dark:text-accent-200">
-                        Home
-                    </a>
-                    <a href="{% url 'services' %}" class="mobile-nav-link px-4 py-3 rounded-lg hover:bg-accent-100 dark:hover:bg-accent-800 transition text-accent-700 dark:text-accent-200">
-                        Services
-                    </a>
-                    <a href="{% url 'blog' %}" class="mobile-nav-link px-4 py-3 rounded-lg hover:bg-accent-100 dark:hover:bg-accent-800 transition text-accent-700 dark:text-accent-200">
-                        Blog
-                    </a>
-                    <a href="{% url 'about_us' %}" class="mobile-nav-link px-4 py-3 rounded-lg hover:bg-accent-100 dark:hover:bg-accent-800 transition text-accent-700 dark:text-accent-200">
-                        About Us
-                    </a>
-                    <a href="{% url 'review_page' %}" class="mobile-nav-link px-4 py-3 rounded-lg hover:bg-accent-100 dark:hover:bg-accent-800 transition text-accent-700 dark:text-accent-200">
-                        Reviews
+            <!-- Mobile Menu Dropdown - Stylish with Icons -->
+            <div id="mobile-menu" class="mobile-menu md:hidden mt-4 border-t border-accent-200 dark:border-accent-700 mobile-menu-container">
+                <div class="flex flex-col space-y-2 py-4">
+                    <!-- Home with icon -->
+                    <a href="{% url 'home' %}" class="mobile-nav-link text-accent-700 dark:text-accent-200">
+                        <i class="fas fa-home"></i>
+                        <span class="font-medium">Home</span>
                     </a>
                     
-                    <!-- Mobile Auth Buttons -->
+                    <!-- Services with icon -->
+                    <a href="{% url 'services' %}" class="mobile-nav-link text-accent-700 dark:text-accent-200">
+                        <i class="fas fa-cogs"></i>
+                        <span class="font-medium">Services</span>
+                    </a>
+                    
+                    <!-- Blog with icon -->
+                    <a href="{% url 'blog' %}" class="mobile-nav-link text-accent-700 dark:text-accent-200">
+                        <i class="fas fa-blog"></i>
+                        <span class="font-medium">Blog</span>
+                    </a>
+                    
+                    <!-- About Us with icon -->
+                    <a href="{% url 'about_us' %}" class="mobile-nav-link text-accent-700 dark:text-accent-200">
+                        <i class="fas fa-info-circle"></i>
+                        <span class="font-medium">About Us</span>
+                    </a>
+                    
+                    <!-- Reviews with icon -->
+                    <a href="{% url 'review_page' %}" class="mobile-nav-link text-accent-700 dark:text-accent-200">
+                        <i class="fas fa-star"></i>
+                        <span class="font-medium">Reviews</span>
+                    </a>
+                    
+                    <!-- Mobile Auth Buttons with Icons -->
                     <div class="pt-4 mt-4 border-t border-accent-200 dark:border-accent-700 space-y-2">
                         {% if user.is_authenticated %}
                             {% if user.profile.role == 'SUPERADMIN' %}
                                 <a href="{% url 'dashboard' %}" 
-                                   class="block w-full bg-primary-500 hover:bg-primary-600 text-white px-4 py-3 rounded-lg font-semibold transition-all shadow-md text-center">
-                                    <i class="fas fa-tachometer-alt mr-2"></i>Dashboard
+                                   class="flex items-center w-full bg-primary-500 hover:bg-primary-600 text-white px-4 py-3 rounded-lg font-semibold transition-all shadow-md">
+                                    <i class="fas fa-tachometer-alt mr-3"></i>
+                                    Dashboard
                                 </a>
                             {% endif %}
                             <a href="{% url 'logout' %}" 
-                               class="block w-full bg-accent-200 hover:bg-accent-300 text-accent-800 dark:bg-accent-700 dark:hover:bg-accent-600 dark:text-accent-100 px-4 py-3 rounded-lg font-semibold transition-all text-center">
-                                <i class="fas fa-sign-out-alt mr-2"></i>Logout
+                               class="flex items-center w-full bg-accent-200 hover:bg-accent-300 text-accent-800 dark:bg-accent-700 dark:hover:bg-accent-600 dark:text-accent-100 px-4 py-3 rounded-lg font-semibold transition-all">
+                                <i class="fas fa-sign-out-alt mr-3"></i>
+                                Logout
                             </a>
                         {% else %}
                             <a href="{% url 'login' %}" 
-                               class="block w-full bg-primary-500 hover:bg-primary-600 text-white px-4 py-3 rounded-lg font-semibold transition-all shadow-md text-center">
-                                <i class="fas fa-sign-in-alt mr-2"></i>Login
+                               class="flex items-center w-full bg-primary-500 hover:bg-primary-600 text-white px-4 py-3 rounded-lg font-semibold transition-all shadow-md">
+                                <i class="fas fa-sign-in-alt mr-3"></i>
+                                Login
                             </a>
                         {% endif %}
                     </div>
@@ -272,7 +398,7 @@
     </header>
 
     <!-- ===== MAIN CONTENT ===== -->
-    <main class="pt-16 sm:pt-20">
+    <main class="pt-16 sm:pt-20 min-h-screen">
         {% block content %}{% endblock %}
     </main>
 
@@ -293,16 +419,16 @@
                     <p class="mt-3 sm:mt-4 text-accent-300 max-w-md text-sm sm:text-base px-4 md:px-0">Innovative software solutions to transform your business and drive growth in the digital age.</p>
                 </div>
                 <div class="flex space-x-4 sm:space-x-6">
-                    <a href="#" class="text-accent-300 hover:text-white transition-colors">
+                    <a href="#" class="text-accent-300 hover:text-white transition-colors touch-target">
                         <i class="fab fa-linkedin-in text-lg sm:text-xl"></i>
                     </a>
-                    <a href="#" class="text-accent-300 hover:text-white transition-colors">
+                    <a href="#" class="text-accent-300 hover:text-white transition-colors touch-target">
                         <i class="fab fa-twitter text-lg sm:text-xl"></i>
                     </a>
-                    <a href="#" class="text-accent-300 hover:text-white transition-colors">
+                    <a href="#" class="text-accent-300 hover:text-white transition-colors touch-target">
                         <i class="fab fa-github text-lg sm:text-xl"></i>
                     </a>
-                    <a href="#" class="text-accent-300 hover:text-white transition-colors">
+                    <a href="#" class="text-accent-300 hover:text-white transition-colors touch-target">
                         <i class="fab fa-facebook-f text-lg sm:text-xl"></i>
                     </a>
                 </div>
@@ -320,32 +446,38 @@
         AOS.init({ 
             duration: window.innerWidth < 768 ? 400 : 600, 
             once: true, 
-            offset: 30,
+            offset: window.innerWidth < 640 ? 20 : 30,
             easing: 'ease-out-cubic',
             disable: window.innerWidth < 480
         });
 
-        // Mobile Menu Toggle
+        // Stylish Mobile Menu Toggle with Animation
         const mobileMenuButton = document.getElementById('mobile-menu-button');
         const mobileMenu = document.getElementById('mobile-menu');
         
         if (mobileMenuButton && mobileMenu) {
             mobileMenuButton.addEventListener('click', () => {
-                mobileMenu.classList.toggle('hidden');
+                // Toggle menu button animation
+                mobileMenuButton.classList.toggle('active');
                 
-                // Add animation class
-                if (!mobileMenu.classList.contains('hidden')) {
-                    mobileMenu.classList.add('mobile-menu-enter-active');
-                    setTimeout(() => {
-                        mobileMenu.classList.remove('mobile-menu-enter-active');
-                    }, 300);
+                // Toggle menu with animation
+                if (mobileMenu.classList.contains('open')) {
+                    mobileMenu.classList.remove('open');
+                    // Prevent body scroll when menu is open
+                    document.body.style.overflow = '';
+                } else {
+                    mobileMenu.classList.add('open');
+                    // Prevent body scroll when menu is open
+                    document.body.style.overflow = 'hidden';
                 }
             });
 
             // Close mobile menu on window resize
             window.addEventListener('resize', () => {
                 if (window.innerWidth >= 768) {
-                    mobileMenu.classList.add('hidden');
+                    mobileMenu.classList.remove('open');
+                    mobileMenuButton.classList.remove('active');
+                    document.body.style.overflow = '';
                 }
             });
 
@@ -353,7 +485,9 @@
             const mobileLinks = mobileMenu.querySelectorAll('a');
             mobileLinks.forEach(link => {
                 link.addEventListener('click', () => {
-                    mobileMenu.classList.add('hidden');
+                    mobileMenu.classList.remove('open');
+                    mobileMenuButton.classList.remove('active');
+                    document.body.style.overflow = '';
                 });
             });
         }
@@ -388,6 +522,15 @@
                 }
             });
         }
+
+        // Handle orientation change
+        window.addEventListener('orientationchange', () => {
+            if (window.innerWidth >= 768) {
+                mobileMenu.classList.remove('open');
+                mobileMenuButton.classList.remove('active');
+                document.body.style.overflow = '';
+            }
+        });
     </script>
     
     {% block extra_js %}{% endblock %}
