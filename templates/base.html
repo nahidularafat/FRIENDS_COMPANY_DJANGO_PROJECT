@@ -143,23 +143,32 @@
                     <!-- Auth buttons (desktop) -->
                     <div class="hidden md:flex items-center space-x-2 lg:space-x-4">
                         {% if user.is_authenticated %}
+                            
                             {% if user.profile.role == 'SUPERADMIN' %}
-                                <a href="{% url 'dashboard' %}" class="bg-primary-500 hover:bg-primary-600 text-white px-3 lg:px-4 py-2 rounded-lg font-semibold transition-all shadow-md hover:shadow-lg flex items-center text-sm lg:text-base">
-                                    <i class="fas fa-tachometer-alt mr-1 lg:mr-2"></i>
-                                    <span class="hidden lg:inline">Dashboard</span>
-                                    <span class="lg:hidden">Dash</span>
-                                </a>
+                            <a href="{% url 'dashboard' %}" 
+                            class="bg-primary-500 hover:bg-primary-600 text-white px-3 lg:px-4 py-2 rounded-lg font-semibold transition-all shadow-md hover:shadow-lg flex items-center text-sm lg:text-base">
+                                <i class="fas fa-tachometer-alt mr-1 lg:mr-2"></i>
+                                <span class="hidden lg:inline">Dashboard</span>
+                                <span class="lg:hidden">Dash</span>
+                            </a>
                             {% endif %}
-                            <a href="{% url 'logout' %}" class="bg-accent-200 hover:bg-accent-300 text-accent-800 dark:bg-accent-700 dark:hover:bg-accent-600 dark:text-accent-100 px-3 lg:px-4 py-2 rounded-lg font-semibold transition-all flex items-center text-sm lg:text-base">
+
+                            <a href="{% url 'logout' %}" 
+                            class="bg-accent-200 hover:bg-accent-300 text-accent-800 dark:bg-accent-700 dark:hover:bg-accent-600 dark:text-accent-100 px-3 lg:px-4 py-2 rounded-lg font-semibold transition-all flex items-center text-sm lg:text-base">
                                 <i class="fas fa-sign-out-alt mr-1 lg:mr-2"></i>
                                 <span class="hidden lg:inline">Logout</span>
                                 <span class="lg:hidden">Out</span>
                             </a>
+
                         {% else %}
-                            <a href="{% url 'login' %}" class="bg-primary-500 hover:bg-primary-600 text-white px-4 lg:px-6 py-2 rounded-lg font-semibold transition-all shadow-md hover:shadow-lg flex items-center text-sm lg:text-base">
-                                <i class="fas fa-sign-in-alt mr-1 lg:mr-2"></i>
-                                <span>Login</span>
+
+                            <!-- GET STARTED BUTTON -->
+                            <a href="{% url 'contact' %}" 
+                            class="bg-primary-500 hover:bg-primary-600 text-white px-4 lg:px-6 py-2 rounded-lg font-semibold transition-all shadow-md hover:shadow-lg flex items-center text-sm lg:text-base">
+                                <i class="fas fa-rocket mr-2"></i>
+                                <span>Get Started</span>
                             </a>
+
                         {% endif %}
                     </div>
                 </div>
@@ -173,20 +182,26 @@
                     <a href="{% url 'blog' %}" class="nav-link text-accent-700 dark:text-accent-200 hover:text-primary-500 font-semibold py-2 px-2 rounded-lg hover:bg-accent-50 dark:hover:bg-accent-800 transition-colors">Blog</a>
                     <a href="{% url 'about_us' %}" class="nav-link text-accent-700 dark:text-accent-200 hover:text-primary-500 font-semibold py-2 px-2 rounded-lg hover:bg-accent-50 dark:hover:bg-accent-800 transition-colors">About Us</a>
                     <a href="{% url 'review_page' %}" class="nav-link text-accent-700 dark:text-accent-200 hover:text-primary-500 font-semibold py-2 px-2 rounded-lg hover:bg-accent-50 dark:hover:bg-accent-800 transition-colors">Reviews</a>
+                  
                     <!-- Mobile auth buttons -->
                     <div class="pt-4 border-t border-accent-200 dark:border-accent-700">
                         {% if user.is_authenticated %}
                             {% if user.profile.role == 'SUPERADMIN' %}
-                                <a href="{% url 'dashboard' %}" class="block w-full bg-primary-500 hover:bg-primary-600 text-white px-4 py-3 rounded-lg font-semibold transition-all shadow-md hover:shadow-lg text-center mb-2">
-                                    <i class="fas fa-tachometer-alt mr-2"></i>Dashboard
-                                </a>
+                            <a href="{% url 'dashboard' %}" 
+                            class="block w-full bg-primary-500 hover:bg-primary-600 text-white px-4 py-3 rounded-lg font-semibold transition-all shadow-md hover:shadow-lg text-center mb-2">
+                                <i class="fas fa-tachometer-alt mr-2"></i>Dashboard
+                            </a>
                             {% endif %}
-                            <a href="{% url 'logout' %}" class="block w-full bg-accent-200 hover:bg-accent-300 text-accent-800 dark:bg-accent-700 dark:hover:bg-accent-600 dark:text-accent-100 px-4 py-3 rounded-lg font-semibold transition-all text-center">
+
+                            <a href="{% url 'logout' %}" 
+                            class="block w-full bg-accent-200 hover:bg-accent-300 text-accent-800 dark:bg-accent-700 dark:hover:bg-accent-600 dark:text-accent-100 px-4 py-3 rounded-lg font-semibold transition-all text-center">
                                 <i class="fas fa-sign-out-alt mr-2"></i>Logout
                             </a>
                         {% else %}
-                            <a href="{% url 'login' %}" class="block w-full bg-primary-500 hover:bg-primary-600 text-white px-4 py-3 rounded-lg font-semibold transition-all shadow-md hover:shadow-lg text-center">
-                                <i class="fas fa-sign-in-alt mr-2"></i>Login
+                            <!-- GET STARTED BUTTON -->
+                            <a href="{% url 'contact' %}" 
+                            class="block w-full bg-primary-500 hover:bg-primary-600 text-white px-4 py-3 rounded-lg font-semibold transition-all shadow-md hover:shadow-lg text-center">
+                                <i class="fas fa-rocket mr-2"></i>Get Started
                             </a>
                         {% endif %}
                     </div>
@@ -238,27 +253,26 @@
     </footer>
 
     <!-- AOS Animation -->
-<script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
 
-<script>
-document.addEventListener("DOMContentLoaded", function () {
-
-    AOS.init({
-        duration: 900,        // slower animation
-        delay: 100,           // small delay
-        offset: 80,           // trigger earlier when scrolling
-        once: true,           // animate only once
-        easing: 'ease-out-cubic',
-        mirror: false,        // no animation when scrolling back
-        anchorPlacement: 'top-bottom'
-    });
-
-});
-</script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            AOS.init({
+                duration: 900,
+                delay: 100,
+                offset: 80,
+                once: true,
+                easing: 'ease-out-cubic',
+                mirror: false,
+                anchorPlacement: 'top-bottom'
+            });
+        });
+    </script>
 
     <!-- ===== THEME TOGGLE + MOBILE MENU ===== -->
     <script>
         document.addEventListener('DOMContentLoaded', function() {
+            // Theme toggle functionality
             const themeToggle = document.getElementById('theme-toggle');
             const darkIcon = document.getElementById('theme-toggle-dark-icon');
             const lightIcon = document.getElementById('theme-toggle-light-icon');
@@ -288,14 +302,44 @@ document.addEventListener("DOMContentLoaded", function () {
             // Mobile menu toggle
             const mobileMenuButton = document.getElementById('mobile-menu-button');
             const mobileMenu = document.getElementById('mobile-menu');
+            
             if (mobileMenuButton && mobileMenu) {
-                mobileMenuButton.addEventListener('click', () => {
+                mobileMenuButton.addEventListener('click', function(e) {
+                    e.stopPropagation();
                     mobileMenu.classList.toggle('hidden');
+                    
+                    // Change icon based on menu state
+                    const icon = this.querySelector('svg');
+                    if (mobileMenu.classList.contains('hidden')) {
+                        icon.innerHTML = '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>';
+                    } else {
+                        icon.innerHTML = '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>';
+                    }
+                });
+
+                // Close menu when clicking on a link
+                const menuLinks = mobileMenu.querySelectorAll('a');
+                menuLinks.forEach(link => {
+                    link.addEventListener('click', () => {
+                        mobileMenu.classList.add('hidden');
+                        // Reset hamburger icon
+                        const icon = mobileMenuButton.querySelector('svg');
+                        icon.innerHTML = '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>';
+                    });
+                });
+
+                // Close menu when clicking outside
+                document.addEventListener('click', function(event) {
+                    if (!mobileMenu.contains(event.target) && !mobileMenuButton.contains(event.target)) {
+                        mobileMenu.classList.add('hidden');
+                        // Reset hamburger icon
+                        const icon = mobileMenuButton.querySelector('svg');
+                        icon.innerHTML = '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>';
+                    }
                 });
             }
         });
     </script>
-    
 
     {% block extra_js %}{% endblock %}
 </body>

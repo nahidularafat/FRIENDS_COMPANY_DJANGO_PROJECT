@@ -1,14 +1,15 @@
-# file path: protfolio/views.py
-
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth.decorators import login_required
+from django.contrib import messages
+
 from .forms import (
     CustomUserCreationForm, ReviewForm, DeveloperForm,
     ServiceForm, BlogPostForm, ClientForm
 )
 from .models import Service, BlogPost, Developer, Review, Profile, Client
+from .models import ContactInfo, ContactMessage
 from django.contrib.auth.models import User
 
 # --- Decorators ---
@@ -59,7 +60,6 @@ def logout_view(request):
 def home(request):
     services = Service.objects.all()
     clients = Client.objects.all()
-    # Assuming HeroSection model might exist from previous interactions
     try:
         from .models import HeroSection
         hero_section = HeroSection.objects.filter(is_active=True).first()
@@ -159,15 +159,13 @@ def blog_create(request):
     if request.method == 'POST':
         form = BlogPostForm(request.POST, request.FILES)
         if form.is_valid():
-            # ** পরিবর্তন এখানে **
-            post = form.save(commit=False)  # Don't save to DB yet
-            post.author = request.user      # Set the author to the logged-in user
-            post.save()                     # Now save the instance with the author
+            post = form.save(commit=False)
+            post.author = request.user
+            post.save()
             return redirect('blog')
     else:
         form = BlogPostForm()
     return render(request, 'generic_form.html', {'form': form, 'title': 'Add New Blog Post'})
-
 
 def blog_update(request, pk):
     return update_item(request, pk, BlogPost, BlogPostForm, 'generic_form.html', 'blog')
@@ -205,7 +203,6 @@ def client_delete(request, pk):
 @login_required
 @superadmin_required
 def dashboard(request):
-    # Assuming HeroSection model might exist from previous interactions
     try:
         from .views import hero_section_update
     except ImportError:
@@ -227,7 +224,7 @@ def user_management(request):
     users = User.objects.all().select_related('profile')
     return render(request, 'dashboard/user_management.html', {'users': users})
 
-# This is a placeholder for a view that might exist from previous user requests
+# --- Hero Section Update ---
 try:
     from .forms import HeroSectionForm
     from .models import HeroSection
@@ -238,3 +235,29 @@ try:
         return update_item(request, hero_section.pk, HeroSection, HeroSectionForm, 'generic_form.html', 'dashboard')
 except (ImportError, NameError):
     pass
+
+# --- Contact Page ---
+def contact(request):
+    contacts = ContactInfo.objects.all()
+
+    if request.method == "POST":
+        name = request.POST.get('name')
+        email = request.POST.get('email')
+        phone = request.POST.get('phone')
+        message = request.POST.get('message')
+
+        # Save the message
+        ContactMessage.objects.create(
+            name=name,
+            email=email,
+            phone=phone,
+            message=message
+        )
+
+        # Show success message
+        messages.success(request, "Your message has been sent successfully!")
+
+        # Redirect back to contact page
+        return redirect('contact')
+
+    return render(request, 'contact.html', {'contacts': contacts})

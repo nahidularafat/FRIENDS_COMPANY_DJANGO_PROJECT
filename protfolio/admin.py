@@ -2,7 +2,8 @@
 
 from django.contrib import admin
 from .models import Service, BlogPost, Developer, Review, Profile, Client
-
+from .models import ContactInfo
+from .models import ContactInfo, ContactMessage
 @admin.register(Service)
 class ServiceAdmin(admin.ModelAdmin):
     list_display = ('title',)
@@ -35,3 +36,16 @@ class ProfileAdmin(admin.ModelAdmin):
 class ClientAdmin(admin.ModelAdmin):
     list_display = ('name', 'display_order', 'website_url')
     list_editable = ('display_order',)
+
+
+@admin.register(ContactInfo)
+class ContactInfoAdmin(admin.ModelAdmin):
+    list_display = ('email', 'phone', 'whatsapp')
+    search_fields = ('email', 'phone')
+
+
+@admin.register(ContactMessage)
+class ContactMessageAdmin(admin.ModelAdmin):
+    list_display = ('name', 'email', 'phone', 'created_at')
+    search_fields = ('name', 'email')
+    list_filter = ('created_at',)

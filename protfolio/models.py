@@ -16,7 +16,26 @@ class Service(models.Model):
 
     def __str__(self):
         return self.title
+class ContactInfo(models.Model):
+    address = models.TextField()
+    phone = models.CharField(max_length=20)
+    whatsapp = models.CharField(max_length=20)
+    email = models.EmailField()
 
+    def __str__(self):
+        return self.email
+
+
+class ContactMessage(models.Model):
+    name = models.CharField(max_length=100)
+    email = models.EmailField()
+    phone = models.CharField(max_length=20, blank=True, null=True)
+    message = models.TextField()
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return self.name
+        
 class BlogPost(models.Model):
     title = models.CharField(max_length=200)
     content = models.TextField()

@@ -41,4 +41,6 @@ urlpatterns = [
     # Superadmin Dashboard
     path('dashboard/', views.dashboard, name='dashboard'),
     path('dashboard/users/', views.user_management, name='user_management'),
+
+    path('contact/', views.contact, name='contact'),
 ]
