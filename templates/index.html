@@ -7,32 +7,87 @@
 
 {% block content %}
 <!-- Hero Section -->
-<section class="relative text-center py-16 sm:py-20 md:py-32 text-white gradient-bg overflow-hidden">
-    <div class="absolute inset-0 bg-black opacity-20"></div>
+<section class="relative text-center py-16 sm:py-20 md:py-32 text-white overflow-hidden">
+    <!-- Animated Gradient Background -->
+    <div class="absolute inset-0 bg-gradient-to-br from-red-600 via-blue-600 to-black animate-gradient-xy"></div>
+    
+    <!-- Overlay Patterns -->
+    <div class="absolute inset-0 bg-[url('data:image/svg+xml,%3Csvg width="60" height="60" viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg"%3E%3Cg fill="none" fill-rule="evenodd"%3E%3Cg fill="%23ffffff" fill-opacity="0.05"%3E%3Cpath d="M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z"/%3E%3C/g%3E%3C/g%3E%3C/svg%3E')] opacity-20"></div>
+    
+    <!-- Animated Orbs -->
     <div class="absolute top-0 left-0 w-full h-full overflow-hidden">
-        <div class="absolute -top-24 -right-24 w-48 sm:w-64 h-48 sm:h-64 bg-white opacity-10 rounded-full"></div>
-        <div class="absolute -bottom-32 -left-32 w-64 sm:w-80 h-64 sm:h-80 bg-white opacity-10 rounded-full"></div>
-        <div class="absolute top-1/2 right-1/4 w-32 sm:w-40 h-32 sm:h-40 bg-white opacity-10 rounded-full"></div>
+        <!-- Red Orbs -->
+        <div class="absolute -top-24 -right-24 w-64 h-64 bg-red-500 opacity-30 rounded-full blur-3xl animate-pulse"></div>
+        <div class="absolute top-1/3 -left-32 w-80 h-80 bg-red-400 opacity-20 rounded-full blur-3xl animate-pulse animation-delay-2000"></div>
+        
+        <!-- Blue Orbs -->
+        <div class="absolute -bottom-32 -left-32 w-96 h-96 bg-blue-500 opacity-30 rounded-full blur-3xl animate-pulse animation-delay-1000"></div>
+        <div class="absolute top-2/3 right-1/4 w-72 h-72 bg-blue-400 opacity-20 rounded-full blur-3xl animate-pulse animation-delay-3000"></div>
+        
+        <!-- White Orbs -->
+        <div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-48 h-48 bg-white opacity-10 rounded-full blur-2xl"></div>
+        <div class="absolute bottom-1/4 right-1/3 w-40 h-40 bg-white opacity-10 rounded-full blur-xl"></div>
+        
+        <!-- Black Accents -->
+        <div class="absolute top-1/4 right-1/3 w-32 h-32 bg-black opacity-20 rounded-full blur-xl"></div>
     </div>
+
     <div class="relative container mx-auto px-4 sm:px-6 z-10">
         <h1 class="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-extrabold mb-4 sm:mb-6 leading-tight" data-aos="fade-up">
-            Transform Your Business With <span class="text-accent-100 block sm:inline">Digital Innovation</span>
+            Transform Your Business With <span class="text-white block sm:inline drop-shadow-lg">Digital Innovation</span>
         </h1>
-        <p class="text-base sm:text-lg md:text-xl lg:text-2xl mb-6 sm:mb-8 md:mb-10 max-w-3xl mx-auto text-accent-100 px-4" data-aos="fade-up" data-aos-delay="200">
+        <p class="text-base sm:text-lg md:text-xl lg:text-2xl mb-6 sm:mb-8 md:mb-10 max-w-3xl mx-auto text-white/90 px-4 drop-shadow-md" data-aos="fade-up" data-aos-delay="200">
             We build robust, scalable, and elegant software solutions that drive growth and efficiency for your business.
         </p>
         <div class="flex flex-col sm:flex-row justify-center gap-3 sm:gap-4 px-4" data-aos="fade-up" data-aos-delay="400">
             <a href="{% url 'services' %}"
-               class="bg-white text-primary-600 hover:bg-accent-50 font-bold py-3 sm:py-4 px-6 sm:px-8 rounded-full transition duration-300 shadow-lg hover:shadow-xl text-sm sm:text-base">
+               class="bg-white text-red-600 hover:bg-red-50 font-bold py-3 sm:py-4 px-6 sm:px-8 rounded-full transition duration-300 shadow-lg hover:shadow-xl text-sm sm:text-base transform hover:-translate-y-1">
                Explore Our Services
             </a>
             <a href="{% url 'contact' %}"
-   class="bg-transparent border-2 border-white text-white hover:bg-white hover:text-primary-600 font-bold py-3 sm:py-4 px-6 sm:px-8 rounded-full transition duration-300 text-sm sm:text-base">
-   Get Started
-</a>
+               class="bg-transparent border-2 border-white text-white hover:bg-white hover:text-blue-600 font-bold py-3 sm:py-4 px-6 sm:px-8 rounded-full transition duration-300 text-sm sm:text-base transform hover:-translate-y-1 backdrop-blur-sm">
+               Get Started
+            </a>
         </div>
     </div>
 </section>
+
+<style>
+@keyframes gradient-xy {
+    0%, 100% {
+        background-size: 400% 400%;
+        background-position: left top;
+    }
+    25% {
+        background-size: 400% 400%;
+        background-position: right top;
+    }
+    50% {
+        background-size: 400% 400%;
+        background-position: right bottom;
+    }
+    75% {
+        background-size: 400% 400%;
+        background-position: left bottom;
+    }
+}
+
+.animate-gradient-xy {
+    animation: gradient-xy 15s ease infinite;
+}
+
+.animation-delay-1000 {
+    animation-delay: 1s;
+}
+
+.animation-delay-2000 {
+    animation-delay: 2s;
+}
+
+.animation-delay-3000 {
+    animation-delay: 3s;
+}
+</style>
 
 <!-- Services Section -->
 <section class="py-12 sm:py-16 md:py-20 bg-accent-50 dark:bg-accent-800 overflow-hidden">
