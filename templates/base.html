@@ -235,11 +235,24 @@
         </div>
     </footer>
 
-    <!-- AOS -->
-    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
-    <script>
-        AOS.init({ once: true });
-    </script>
+    <!-- AOS Animation -->
+<script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+
+    AOS.init({
+        duration: 900,        // slower animation
+        delay: 100,           // small delay
+        offset: 80,           // trigger earlier when scrolling
+        once: true,           // animate only once
+        easing: 'ease-out-cubic',
+        mirror: false,        // no animation when scrolling back
+        anchorPlacement: 'top-bottom'
+    });
+
+});
+</script>
 
     <!-- ===== THEME TOGGLE + MOBILE MENU ===== -->
     <script>

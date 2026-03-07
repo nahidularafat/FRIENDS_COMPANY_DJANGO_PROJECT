@@ -1,347 +1,163 @@
+{% extends 'base.html' %}
 {% load static %}
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Our Services - IT-SOLUTION</title>
-    
-    <!-- Tailwind CSS -->
-    <script src="https://cdn.tailwindcss.com/3.4.3"></script>
-    <script>
-        tailwind.config = {
-            darkMode: 'class',
-            theme: {
-                extend: {
-                    colors: {
-                        primary: {
-                            50: '#f0f9ff',
-                            100: '#e0f2fe',
-                            500: '#0ea5e9',
-                            600: '#0284c7',
-                            700: '#0369a1',
-                            800: '#075985',
-                            900: '#0c4a6e',
-                        },
-                        accent: {
-                            50: '#f8fafc',
-                            100: '#f1f5f9',
-                            200: '#e2e8f0',
-                            300: '#cbd5e1',
-                            400: '#94a3b8',
-                            500: '#64748b',
-                            600: '#475569',
-                            700: '#334155',
-                            800: '#1e293b',
-                            900: '#0f172a',
-                        }
-                    },
-                    fontFamily: {
-                        'sans': ['Inter', 'system-ui', 'sans-serif'],
-                    }
-                }
-            }
-        }
-    </script>
 
-    <!-- Google Fonts -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+{% block title %}Our Services - IT-SOLUTION{% endblock %}
 
-    <!-- Favicon -->
-    <link rel="icon" type="image/png" href="{% static 'images/icon.png' %}">
+{% block services_active %}
+text-primary-500 font-semibold border-b-2 border-primary-500
+{% endblock %}
 
-    <!-- Font Awesome -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+{% block content %}
 
-    <!-- AOS -->
-    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+<!-- Hero Section -->
+<section class="relative py-20 bg-gradient-to-br from-primary-50 to-accent-50 dark:from-accent-800 dark:to-accent-900 overflow-hidden">
+    <div class="absolute inset-0 bg-white/50 dark:bg-black/20"></div>
+    <div class="relative container mx-auto px-4 text-center">
+        <h1 class="text-4xl md:text-5xl font-bold mb-6 text-accent-800 dark:text-white" data-aos="fade-up">
+            Our <span class="gradient-text">Comprehensive</span> Services
+        </h1>
+        <p class="text-xl text-accent-600 dark:text-accent-300 max-w-3xl mx-auto mb-8" data-aos="fade-up" data-aos-delay="200">
+            Discover our full range of professional software solutions designed to elevate your business to new heights.
+        </p>
+    </div>
+</section>
 
-    <!-- Custom CSS -->
-    <style>
-        .glass-effect {
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(10px);
-            border-bottom: 1px solid rgba(0, 0, 0, 0.1);
-        }
-        .dark .glass-effect {
-            background: rgba(15, 23, 42, 0.95);
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-        }
-        .service-card {
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-            border: 1px solid transparent;
-        }
-        .service-card:hover {
-            transform: translateY(-8px);
-            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
-            border-color: rgba(14, 165, 233, 0.2);
-        }
-        .nav-link {
-            position: relative;
-        }
-        .nav-link::after {
-            content: '';
-            position: absolute;
-            width: 0;
-            height: 2px;
-            bottom: -4px;
-            left: 0;
-            background-color: #0ea5e9;
-            transition: width 0.3s ease;
-        }
-        .nav-link:hover::after {
-            width: 100%;
-        }
-        .gradient-text {
-            background: linear-gradient(135deg, #0ea5e9 0%, #0369a1 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-        }
-    </style>
-</head>
 
-<body class="bg-white dark:bg-accent-900 text-accent-800 dark:text-accent-100 font-sans transition-colors duration-300">
+<!-- Services Section -->
+<section class="py-20 bg-white dark:bg-accent-900 overflow-hidden">
+    <div class="container mx-auto px-4">
 
-    <!-- ===== HEADER ===== -->
-    <header class="glass-effect fixed w-full z-50 shadow-sm">
-        <nav class="container mx-auto px-6 py-4 flex justify-between items-center">
-            
-            <!-- Logo -->
-            <a href="{% url 'home' %}" class="flex items-center space-x-3 group">
-                <div class="p-2 bg-primary-500 rounded-lg group-hover:bg-primary-600 transition-colors shadow-md">
-                    <img class="w-8 h-8" src="{% static 'images/logo.png' %}" alt="IT-SOLUTION Logo">
-                </div>
-                <div>
-                    <span class="text-xl font-bold text-accent-800 dark:text-white block">IT SOLUTION</span>
-                    <span class="text-primary-500 font-semibold text-sm -mt-1 block">IT Solutions</span>
-                </div>
+        <div class="flex flex-col md:flex-row justify-between items-center mb-16" data-aos="fade-up">
+            <div class="text-center md:text-left mb-6 md:mb-0">
+                <span class="text-primary-500 font-semibold tracking-wide uppercase">What We Offer</span>
+                <h2 class="text-3xl md:text-4xl font-bold mt-2 text-accent-800 dark:text-white">
+                    Professional Services
+                </h2>
+            </div>
+
+            {% if user.is_authenticated and user.profile.role == 'SUPERADMIN' %}
+            <a href="{% url 'service_create' %}" 
+               class="bg-primary-500 hover:bg-primary-600 text-white font-semibold py-3 px-6 rounded-lg transition-all duration-300 shadow-md hover:shadow-lg flex items-center">
+                <i class="fas fa-plus mr-2"></i> Add New Service
             </a>
+            {% endif %}
+        </div>
 
-            <!-- Navbar Links -->
-            <div class="hidden md:flex items-center space-x-8 font-medium">
-                <a href="{% url 'home' %}" class="nav-link text-accent-700 dark:text-accent-200 hover:text-primary-500 font-semibold">Home</a>
-                <a href="{% url 'services' %}" class="nav-link text-primary-500 font-semibold border-b-2 border-primary-500">Services</a>
-                <a href="{% url 'blog' %}" class="nav-link text-accent-700 dark:text-accent-200 hover:text-primary-500 font-semibold">Blog</a>
-                <a href="{% url 'about_us' %}" class="nav-link text-accent-700 dark:text-accent-200 hover:text-primary-500 font-semibold">About Us</a>
-                <a href="{% url 'review_page' %}" class="nav-link text-accent-700 dark:text-accent-200 hover:text-primary-500 font-semibold">Reviews</a>
-            </div>
 
-            <!-- Buttons -->
-            <div class="flex items-center space-x-4">
+        <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
 
-                <!-- Theme Toggle -->
-                <button id="theme-toggle" type="button"
-                    class="text-accent-500 dark:text-accent-400 hover:bg-accent-100 dark:hover:bg-accent-800
-                    focus:outline-none focus:ring-2 focus:ring-primary-500 rounded-lg p-2.5 transition-colors">
-                    <svg id="theme-toggle-dark-icon" class="hidden w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
-                        <path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z"></path>
-                    </svg>
-                    <svg id="theme-toggle-light-icon" class="hidden w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
-                        <path fill-rule="evenodd" clip-rule="evenodd"
-                            d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 
-                            0 011-1zm4 8a4 4 0 11-8 0 4 4 
-                            0 018 0zM4 11a1 1 0 100-2H3a1 1 
-                            0 000 2h1z">
-                        </path>
-                    </svg>
-                </button>
+            {% for service in services %}
 
-                {% if user.is_authenticated %}
-                    {% if user.profile.role == 'SUPERADMIN' %}
-                        <a href="{% url 'dashboard' %}"
-                           class="bg-primary-500 hover:bg-primary-600 text-white px-4 py-2.5 rounded-lg font-semibold transition-all shadow-md hover:shadow-lg flex items-center">
-                            <i class="fas fa-tachometer-alt mr-2"></i>Dashboard
-                        </a>
-                    {% endif %}
-                    <a href="{% url 'logout' %}"
-                       class="bg-accent-200 hover:bg-accent-300 text-accent-800 dark:bg-accent-700 dark:hover:bg-accent-600 dark:text-accent-100 px-4 py-2.5 rounded-lg font-semibold transition-all flex items-center">
-                        <i class="fas fa-sign-out-alt mr-2"></i>Logout
-                    </a>
-                {% else %}
-                    <a href="{% url 'login' %}"
-                       class="bg-primary-500 hover:bg-primary-600 text-white px-6 py-2.5 rounded-lg font-semibold transition-all shadow-md hover:shadow-lg flex items-center">
-                        <i class="fas fa-sign-in-alt mr-2"></i>Login
-                    </a>
+            <div class="service-card bg-white dark:bg-accent-800 p-8 rounded-2xl shadow-lg flex flex-col relative group"
+                 data-aos="fade-up"
+                 data-aos-delay="{{ forloop.counter0|add:1 }}00">
+
+                {% if service.image %}
+                <div class="mb-6 overflow-hidden rounded-xl">
+                    <img src="{{ service.image.url }}"
+                         alt="{{ service.title }}"
+                         class="w-full h-48 object-cover rounded-xl transition-transform duration-300 group-hover:scale-105">
+                </div>
                 {% endif %}
-            </div>
-        </nav>
-    </header>
 
-    <!-- ===== MAIN CONTENT ===== -->
-    <main class="pt-20">
-
-        <!-- Hero Section -->
-        <section class="relative py-20 bg-gradient-to-br from-primary-50 to-accent-50 dark:from-accent-800 dark:to-accent-900 overflow-hidden">
-            <div class="absolute inset-0 bg-white/50 dark:bg-black/20"></div>
-            <div class="relative container mx-auto px-4 text-center">
-                <h1 class="text-4xl md:text-5xl font-bold mb-6 text-accent-800 dark:text-white" data-aos="fade-up">
-                    Our <span class="gradient-text">Comprehensive</span> Services
-                </h1>
-                <p class="text-xl text-accent-600 dark:text-accent-300 max-w-3xl mx-auto mb-8" data-aos="fade-up" data-aos-delay="200">
-                    Discover our full range of professional software solutions designed to elevate your business to new heights.
-                </p>
-            </div>
-        </section>
-
-        <!-- Services Section -->
-        <section class="py-20 bg-white dark:bg-accent-900 overflow-hidden">
-            <div class="container mx-auto px-4">
-                <div class="flex flex-col md:flex-row justify-between items-center mb-16" data-aos="fade-up">
-                    <div class="text-center md:text-left mb-6 md:mb-0">
-                        <span class="text-primary-500 font-semibold tracking-wide uppercase">What We Offer</span>
-                        <h2 class="text-3xl md:text-4xl font-bold mt-2 text-accent-800 dark:text-white">Professional Services</h2>
+                {% if service.icon_class %}
+                <div class="text-center mb-6">
+                    <div class="inline-flex items-center justify-center w-16 h-16 bg-primary-50 dark:bg-primary-900/30 text-primary-500 rounded-2xl mb-4">
+                        <i class="{{ service.icon_class }} text-2xl"></i>
                     </div>
+                </div>
+                {% endif %}
+
+                <h3 class="text-xl font-bold mb-4 text-accent-800 dark:text-white text-center group-hover:text-primary-500 transition-colors">
+                    {{ service.title }}
+                </h3>
+
+                <p class="text-accent-600 dark:text-accent-300 flex-grow leading-relaxed">
+                    {{ service.description }}
+                </p>
+
+                <div class="mt-6 pt-6 border-t border-accent-200 dark:border-accent-700 flex justify-between items-center">
+                    <a href="#" class="text-primary-500 hover:text-primary-600 font-semibold text-sm flex items-center group/link">
+                        Learn More
+                        <i class="fas fa-arrow-right ml-2 group-hover/link:translate-x-1 transition-transform"></i>
+                    </a>
+
+                    <span class="text-xs text-accent-400 dark:text-accent-500 bg-accent-100 dark:bg-accent-700 px-3 py-1 rounded-full">
+                        Service
+                    </span>
+                </div>
+
+                {% if user.is_authenticated and user.profile.role == 'SUPERADMIN' %}
+                <div class="absolute top-4 right-4 flex space-x-2 opacity-0 group-hover:opacity-100 transition-all duration-300">
+                    
+                    <a href="{% url 'service_update' service.pk %}" 
+                       class="bg-primary-500 hover:bg-primary-600 text-white p-2 rounded-lg shadow-md">
+                        <i class="fas fa-edit text-sm"></i>
+                    </a>
+
+                    <a href="{% url 'service_delete' service.pk %}" 
+                       class="bg-red-500 hover:bg-red-600 text-white p-2 rounded-lg shadow-md">
+                        <i class="fas fa-trash text-sm"></i>
+                    </a>
+
+                </div>
+                {% endif %}
+
+            </div>
+
+            {% empty %}
+
+            <div class="col-span-3 text-center py-16">
+                <div class="max-w-md mx-auto">
+
+                    <div class="w-24 h-24 bg-accent-100 dark:bg-accent-800 rounded-full flex items-center justify-center mx-auto mb-6">
+                        <i class="fas fa-cogs text-3xl text-accent-400"></i>
+                    </div>
+
+                    <h3 class="text-xl font-semibold text-accent-600 dark:text-accent-400 mb-4">
+                        No Services Available
+                    </h3>
+
+                    <p class="text-accent-500 dark:text-accent-500 mb-6">
+                        We're preparing our service offerings. Please check back soon.
+                    </p>
+
                     {% if user.is_authenticated and user.profile.role == 'SUPERADMIN' %}
                     <a href="{% url 'service_create' %}" 
-                       class="bg-primary-500 hover:bg-primary-600 text-white font-semibold py-3 px-6 rounded-lg transition-all duration-300 shadow-md hover:shadow-lg flex items-center">
-                        <i class="fas fa-plus mr-2"></i> Add New Service
+                       class="bg-primary-500 hover:bg-primary-600 text-white font-semibold py-3 px-6 rounded-lg inline-flex items-center">
+                        <i class="fas fa-plus mr-2"></i> Create First Service
                     </a>
                     {% endif %}
-                </div>
 
-                <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-                    {% for service in services %}
-                    <div class="service-card bg-white dark:bg-accent-800 p-8 rounded-2xl shadow-lg flex flex-col relative group" 
-                         data-aos="fade-up" data-aos-delay="{{ forloop.counter0|add:1 }}00">
-                        
-                        <!-- Service Image -->
-                        {% if service.image %}
-                        <div class="mb-6 overflow-hidden rounded-xl">
-                            <img src="{{ service.image.url }}" alt="{{ service.title }}" 
-                                 class="w-full h-48 object-cover rounded-xl transition-transform duration-300 group-hover:scale-105">
-                        </div>
-                        {% endif %}
-
-                        <!-- Service Icon -->
-                        <div class="text-center mb-6">
-                           {% if service.icon_class %}
-                           <div class="inline-flex items-center justify-center w-16 h-16 bg-primary-50 dark:bg-primary-900/30 text-primary-500 rounded-2xl mb-4">
-                                <i class="{{ service.icon_class }} text-2xl"></i>
-                            </div>
-                           {% endif %}
-                        </div>
-
-                        <!-- Service Content -->
-                        <h3 class="text-xl font-bold mb-4 text-accent-800 dark:text-white text-center group-hover:text-primary-500 transition-colors">
-                            {{ service.title }}
-                        </h3>
-                        <p class="text-accent-600 dark:text-accent-300 flex-grow leading-relaxed">
-                            {{ service.description }}
-                        </p>
-
-                        <!-- Action Buttons -->
-                        <div class="mt-6 pt-6 border-t border-accent-200 dark:border-accent-700 flex justify-between items-center">
-                            <a href="#" class="text-primary-500 hover:text-primary-600 font-semibold text-sm flex items-center group/link">
-                                Learn More
-                                <i class="fas fa-arrow-right ml-2 group-hover/link:translate-x-1 transition-transform"></i>
-                            </a>
-                            <span class="text-xs text-accent-400 dark:text-accent-500 bg-accent-100 dark:bg-accent-700 px-3 py-1 rounded-full">
-                                Service
-                            </span>
-                        </div>
-
-                        <!-- Admin Controls -->
-                        {% if user.is_authenticated and user.profile.role == 'SUPERADMIN' %}
-                        <div class="absolute top-4 right-4 flex space-x-2 opacity-0 group-hover:opacity-100 transition-all duration-300">
-                            <a href="{% url 'service_update' service.pk %}" 
-                               class="bg-primary-500 hover:bg-primary-600 text-white p-2 rounded-lg transition-colors shadow-md"
-                               title="Edit Service">
-                                <i class="fas fa-edit text-sm"></i>
-                            </a>
-                            <a href="{% url 'service_delete' service.pk %}" 
-                               class="bg-red-500 hover:bg-red-600 text-white p-2 rounded-lg transition-colors shadow-md"
-                               title="Delete Service">
-                                <i class="fas fa-trash text-sm"></i>
-                            </a>
-                        </div>
-                        {% endif %}
-                    </div>
-                    {% empty %}
-                    <div class="col-span-3 text-center py-16" data-aos="fade-in">
-                        <div class="max-w-md mx-auto">
-                            <div class="w-24 h-24 bg-accent-100 dark:bg-accent-800 rounded-full flex items-center justify-center mx-auto mb-6">
-                                <i class="fas fa-cogs text-3xl text-accent-400 dark:text-accent-500"></i>
-                            </div>
-                            <h3 class="text-xl font-semibold text-accent-600 dark:text-accent-400 mb-4">No Services Available</h3>
-                            <p class="text-accent-500 dark:text-accent-500 mb-6">We're preparing our service offerings. Please check back soon.</p>
-                            {% if user.is_authenticated and user.profile.role == 'SUPERADMIN' %}
-                            <a href="{% url 'service_create' %}" 
-                               class="bg-primary-500 hover:bg-primary-600 text-white font-semibold py-3 px-6 rounded-lg transition-all duration-300 inline-flex items-center">
-                                <i class="fas fa-plus mr-2"></i> Create First Service
-                            </a>
-                            {% endif %}
-                        </div>
-                    </div>
-                    {% endfor %}
-                </div>
-
-                <!-- Call to Action -->
-                <div class="text-center mt-16" data-aos="fade-up">
-                    <div class="bg-gradient-to-r from-primary-50 to-accent-50 dark:from-accent-800 dark:to-accent-700 rounded-2xl p-8 max-w-4xl mx-auto">
-                        <h3 class="text-2xl font-bold text-accent-800 dark:text-white mb-4">Ready to Transform Your Business?</h3>
-                        <p class="text-accent-600 dark:text-accent-300 mb-6 max-w-2xl mx-auto">
-                            Let's discuss how our services can help you achieve your business goals.
-                        </p>
-                        <a href="{% url 'about_us' %}" 
-                           class="bg-primary-500 hover:bg-primary-600 text-white font-semibold py-3 px-8 rounded-lg transition-all duration-300 shadow-md hover:shadow-lg inline-flex items-center">
-                            <i class="fas fa-calendar-check mr-2"></i> Schedule Consultation
-                        </a>
-                    </div>
                 </div>
             </div>
-        </section>
-    </main>
 
-    <!-- ===== FOOTER ===== -->
-    <footer class="bg-accent-800 text-accent-200 py-12">
-        <div class="container mx-auto px-6">
-            <div class="flex flex-col md:flex-row justify-between items-center">
-                <div class="mb-6 md:mb-0">
-                    <a href="{% url 'home' %}" class="flex items-center space-x-3">
-                        <div class="p-2 bg-primary-500 rounded-lg">
-                            <img class="w-6 h-6" src="{% static 'images/logo.png' %}" alt="IT-SOLUTION Logo">
-                        </div>
-                        <div>
-                            <span class="text-xl font-bold text-white block">IT-SOLUTION</span>
-                            <span class="text-primary-400 font-semibold text-sm -mt-1 block">IT Solutions</span>
-                        </div>
-                    </a>
-                    <p class="mt-4 text-accent-300 max-w-md">Innovative software solutions to transform your business and drive growth in the digital age.</p>
-                </div>
-                <div class="flex space-x-6">
-                    <a href="#" class="text-accent-300 hover:text-white transition-colors">
-                        <i class="fab fa-linkedin-in text-xl"></i>
-                    </a>
-                    <a href="#" class="text-accent-300 hover:text-white transition-colors">
-                        <i class="fab fa-twitter text-xl"></i>
-                    </a>
-                    <a href="#" class="text-accent-300 hover:text-white transition-colors">
-                        <i class="fab fa-github text-xl"></i>
-                    </a>
-                    <a href="#" class="text-accent-300 hover:text-white transition-colors">
-                        <i class="fab fa-facebook-f text-xl"></i>
-                    </a>
-                </div>
-            </div>
-            <div class="border-t border-accent-700 mt-8 pt-8 text-center text-accent-400">
-                <p>&copy; {% now "Y" %}IT-SOLUTION. All rights reserved.</p>
+            {% endfor %}
+
+        </div>
+
+
+        <!-- CTA -->
+        <div class="text-center mt-16">
+            <div class="bg-gradient-to-r from-primary-50 to-accent-50 dark:from-accent-800 dark:to-accent-700 rounded-2xl p-8 max-w-4xl mx-auto">
+
+                <h3 class="text-2xl font-bold text-accent-800 dark:text-white mb-4">
+                    Ready to Transform Your Business?
+                </h3>
+
+                <p class="text-accent-600 dark:text-accent-300 mb-6 max-w-2xl mx-auto">
+                    Let's discuss how our services can help you achieve your business goals.
+                </p>
+
+                <a href="{% url 'about_us' %}" 
+                   class="bg-primary-500 hover:bg-primary-600 text-white font-semibold py-3 px-8 rounded-lg shadow-md inline-flex items-center">
+                    <i class="fas fa-calendar-check mr-2"></i> Schedule Consultation
+                </a>
+
             </div>
         </div>
-    </footer>
 
-    <!-- ===== SCRIPTS ===== -->
-    <script src="{% static 'js/script.js' %}"></script>
-    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
-    <script>
-        AOS.init({ 
-            duration: 800, 
-            once: true, 
-            offset: 50,
-            easing: 'ease-out-cubic'
-        });
-    </script>
-</body>
-</html>
+    </div>
+</section>
+
+{% endblock %}
