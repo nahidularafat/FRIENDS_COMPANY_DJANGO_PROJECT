@@ -1,378 +1,201 @@
+{% extends 'base.html' %}
 {% load static %}
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Register - Ondrobit</title>
+
+{% block title %}Register - Ondrobit{% endblock %}
+
+{% block extra_css %}
+<style>
+    .register-card {
+        background: rgba(255, 255, 255, 0.95);
+        backdrop-filter: blur(20px);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+    }
+    .dark .register-card {
+        background: rgba(26, 26, 31, 0.95);
+        border: 1px solid rgba(255, 255, 255, 0.05);
+    }
+    .input-field {
+        transition: all 0.3s ease;
+    }
+    .input-field:focus {
+        transform: translateY(-2px);
+        box-shadow: 0 10px 25px -5px rgba(255, 77, 77, 0.2);
+    }
+    .gradient-bg {
+        background: linear-gradient(135deg, #ff4d4d 0%, #e63e3e 50%, #cc2e2e 100%);
+    }
+    .password-strength {
+        height: 4px;
+        border-radius: 2px;
+        transition: all 0.3s ease;
+    }
+    .password-weak { background: #ef4444; width: 25%; }
+    .password-fair { background: #f59e0b; width: 50%; }
+    .password-good { background: #10b981; width: 75%; }
+    .password-strong { background: #10b981; width: 100%; }
     
-    <!-- Tailwind CSS -->
-    <script src="https://cdn.tailwindcss.com/3.4.3"></script>
-    <script>
-        tailwind.config = {
-            darkMode: 'class',
-            theme: {
-                extend: {
-                    colors: {
-                        primary: {
-                            50: '#f0f9ff',
-                            100: '#e0f2fe',
-                            500: '#0ea5e9',
-                            600: '#0284c7',
-                            700: '#0369a1',
-                            800: '#075985',
-                            900: '#0c4a6e',
-                        },
-                        accent: {
-                            50: '#f8fafc',
-                            100: '#f1f5f9',
-                            200: '#e2e8f0',
-                            300: '#cbd5e1',
-                            400: '#94a3b8',
-                            500: '#64748b',
-                            600: '#475569',
-                            700: '#334155',
-                            800: '#1e293b',
-                            900: '#0f172a',
-                        }
-                    },
-                    fontFamily: {
-                        'sans': ['Inter', 'system-ui', 'sans-serif'],
-                    }
-                }
-            }
-        }
-    </script>
+    /* Animation for floating background elements */
+    @keyframes float {
+        0%, 100% { transform: translateY(0px) translateX(0px); }
+        25% { transform: translateY(-20px) translateX(10px); }
+        50% { transform: translateY(0px) translateX(20px); }
+        75% { transform: translateY(20px) translateX(10px); }
+    }
+</style>
+{% endblock %}
 
-    <!-- Google Fonts -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+{% block content %}
+<div class="min-h-screen flex items-center justify-center gradient-bg py-12 px-4 sm:px-6 lg:px-8 relative overflow-hidden">
+    <!-- Background Elements -->
+    <div class="absolute inset-0 overflow-hidden">
+        <div class="absolute -top-24 -right-24 w-64 h-64 bg-white opacity-10 rounded-full"></div>
+        <div class="absolute -bottom-32 -left-32 w-80 h-80 bg-white opacity-10 rounded-full"></div>
+        <div class="absolute top-1/2 right-1/4 w-40 h-40 bg-white opacity-10 rounded-full"></div>
+        <div class="absolute bottom-1/3 left-1/4 w-32 h-32 bg-white opacity-10 rounded-full"></div>
+        <div class="absolute top-1/3 left-1/2 w-24 h-24 bg-white opacity-5 rounded-full"></div>
+    </div>
+    
+    <!-- Registration Card -->
+    <div class="register-card max-w-md w-full space-y-8 p-8 sm:p-10 rounded-2xl shadow-2xl relative z-10" data-aos="fade-up">
+        <!-- Header -->
+        <div class="text-center">
+            <div class="mx-auto w-20 h-20 bg-gradient-to-r from-primary-500 to-primary-600 rounded-2xl flex items-center justify-center mb-6 shadow-lg">
+                <i class="fas fa-user-plus text-white text-2xl"></i>
+            </div>
+            <h2 class="text-3xl font-bold text-gray-900 dark:text-white mb-2">
+                Join Ondrobit
+            </h2>
+            <p class="text-gray-600 dark:text-gray-400">
+                Create your account and start your journey with us
+            </p>
+        </div>
 
-    <!-- Favicon -->
-    <link rel="icon" type="image/png" href="{% static 'images/icon.png' %}">
-
-    <!-- Font Awesome -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-
-    <!-- Custom CSS -->
-    <style>
-        .glass-effect {
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(10px);
-            border-bottom: 1px solid rgba(0, 0, 0, 0.1);
-        }
-        .dark .glass-effect {
-            background: rgba(15, 23, 42, 0.95);
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-        }
-        .nav-link {
-            position: relative;
-        }
-        .nav-link::after {
-            content: '';
-            position: absolute;
-            width: 0;
-            height: 2px;
-            bottom: -4px;
-            left: 0;
-            background-color: #0ea5e9;
-            transition: width 0.3s ease;
-        }
-        .nav-link:hover::after {
-            width: 100%;
-        }
-        .gradient-bg {
-            background: linear-gradient(135deg, #0ea5e9 0%, #0369a1 50%, #0c4a6e 100%);
-        }
-        .register-card {
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(20px);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-        }
-        .dark .register-card {
-            background: rgba(15, 23, 42, 0.95);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-        }
-        .input-field {
-            transition: all 0.3s ease;
-        }
-        .input-field:focus {
-            transform: translateY(-2px);
-            box-shadow: 0 10px 25px -5px rgba(14, 165, 233, 0.2);
-        }
-        .password-strength {
-            height: 4px;
-            border-radius: 2px;
-            transition: all 0.3s ease;
-        }
-        .password-weak { background: #ef4444; width: 25%; }
-        .password-fair { background: #f59e0b; width: 50%; }
-        .password-good { background: #10b981; width: 75%; }
-        .password-strong { background: #10b981; width: 100%; }
-    </style>
-</head>
-
-<body class="bg-white dark:bg-accent-900 text-accent-800 dark:text-accent-100 font-sans transition-colors duration-300">
-
-    <!-- ===== HEADER ===== -->
-    <header class="glass-effect fixed w-full z-50 shadow-sm">
-        <nav class="container mx-auto px-6 py-4 flex justify-between items-center">
+        <!-- Registration Form -->
+        <form class="mt-8 space-y-6" method="POST">
+            {% csrf_token %}
             
-            <!-- Logo -->
-            <a href="{% url 'home' %}" class="flex items-center space-x-3 group">
-                <div class="p-2 bg-primary-500 rounded-lg group-hover:bg-primary-600 transition-colors shadow-md">
-                    <img class="w-8 h-8" src="{% static 'images/logo.png' %}" alt="I-SOLUTIONT Logo">
-                </div>
+            <div class="space-y-4">
+                {% for field in form %}
                 <div>
-                    <span class="text-xl font-bold text-accent-800 dark:text-white block">Ondrobit</span>
-                    <span class="text-primary-500 font-semibold text-sm -mt-1 block">Ondrobit</span>
-                </div>
-            </a>
-
-            <!-- Navbar Links -->
-            <div class="hidden md:flex items-center space-x-8 font-medium">
-                <a href="{% url 'home' %}" class="nav-link text-accent-700 dark:text-accent-200 hover:text-primary-500 font-semibold">Home</a>
-                <a href="{% url 'services' %}" class="nav-link text-accent-700 dark:text-accent-200 hover:text-primary-500 font-semibold">Services</a>
-                <a href="{% url 'blog' %}" class="nav-link text-accent-700 dark:text-accent-200 hover:text-primary-500 font-semibold">Blog</a>
-                <a href="{% url 'about_us' %}" class="nav-link text-accent-700 dark:text-accent-200 hover:text-primary-500 font-semibold">About Us</a>
-                <a href="{% url 'review_page' %}" class="nav-link text-accent-700 dark:text-accent-200 hover:text-primary-500 font-semibold">Reviews</a>
-            </div>
-
-            <!-- Buttons -->
-            <div class="flex items-center space-x-4">
-
-                <!-- Theme Toggle -->
-                <button id="theme-toggle" type="button"
-                    class="text-accent-500 dark:text-accent-400 hover:bg-accent-100 dark:hover:bg-accent-800
-                    focus:outline-none focus:ring-2 focus:ring-primary-500 rounded-lg p-2.5 transition-colors">
-                    <svg id="theme-toggle-dark-icon" class="hidden w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
-                        <path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z"></path>
-                    </svg>
-                    <svg id="theme-toggle-light-icon" class="hidden w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
-                        <path fill-rule="evenodd" clip-rule="evenodd"
-                            d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 
-                            0 011-1zm4 8a4 4 0 11-8 0 4 4 
-                            0 018 0zM4 11a1 1 0 100-2H3a1 1 
-                            0 000 2h1z">
-                        </path>
-                    </svg>
-                </button>
-
-                {% if user.is_authenticated %}
-                    {% if user.profile.role == 'SUPERADMIN' %}
-                        <a href="{% url 'dashboard' %}"
-                           class="bg-primary-500 hover:bg-primary-600 text-white px-4 py-2.5 rounded-lg font-semibold transition-all shadow-md hover:shadow-lg flex items-center">
-                            <i class="fas fa-tachometer-alt mr-2"></i>Dashboard
-                        </a>
-                    {% endif %}
-                    <a href="{% url 'logout' %}"
-                       class="bg-accent-200 hover:bg-accent-300 text-accent-800 dark:bg-accent-700 dark:hover:bg-accent-600 dark:text-accent-100 px-4 py-2.5 rounded-lg font-semibold transition-all flex items-center">
-                        <i class="fas fa-sign-out-alt mr-2"></i>Logout
-                    </a>
-                {% else %}
-                    <a href="{% url 'login' %}"
-                       class="bg-primary-500 hover:bg-primary-600 text-white px-6 py-2.5 rounded-lg font-semibold transition-all shadow-md hover:shadow-lg flex items-center">
-                        <i class="fas fa-sign-in-alt mr-2"></i>Login
-                    </a>
-                {% endif %}
-            </div>
-        </nav>
-    </header>
-
-    <!-- ===== MAIN CONTENT ===== -->
-    <main class="pt-20">
-        <div class="min-h-screen flex items-center justify-center gradient-bg py-12 px-4 sm:px-6 lg:px-8 relative overflow-hidden">
-            <!-- Background Elements -->
-            <div class="absolute inset-0 overflow-hidden">
-                <div class="absolute -top-24 -right-24 w-64 h-64 bg-white opacity-10 rounded-full"></div>
-                <div class="absolute -bottom-32 -left-32 w-80 h-80 bg-white opacity-10 rounded-full"></div>
-                <div class="absolute top-1/2 right-1/4 w-40 h-40 bg-white opacity-10 rounded-full"></div>
-                <div class="absolute bottom-1/3 left-1/4 w-32 h-32 bg-white opacity-10 rounded-full"></div>
-            </div>
-            
-            <!-- Registration Card -->
-            <div class="register-card max-w-md w-full space-y-8 p-10 rounded-2xl shadow-2xl relative z-10" data-aos="fade-up">
-                <!-- Header -->
-                <div class="text-center">
-                    <div class="mx-auto w-20 h-20 bg-primary-500 rounded-2xl flex items-center justify-center mb-6 shadow-lg">
-                        <i class="fas fa-user-plus text-white text-2xl"></i>
-                    </div>
-                    <h2 class="text-3xl font-bold text-accent-800 dark:text-white mb-2">
-                        Join IT-SOLUTIN-IT
-                    </h2>
-                    <p class="text-accent-600 dark:text-accent-300">
-                        Create your account and start your journey with us
-                    </p>
-                </div>
-
-                <!-- Registration Form -->
-                <form class="mt-8 space-y-6" method="POST">
-                    {% csrf_token %}
+                    <label for="{{ field.id_for_label }}" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                        {% if field.name == 'username' %}
+                            <i class="fas fa-user mr-2 text-primary-500"></i>
+                        {% elif field.name == 'email' %}
+                            <i class="fas fa-envelope mr-2 text-primary-500"></i>
+                        {% elif 'password' in field.name %}
+                            <i class="fas fa-lock mr-2 text-primary-500"></i>
+                        {% else %}
+                            <i class="fas fa-edit mr-2 text-primary-500"></i>
+                        {% endif %}
+                        {{ field.label }}
+                    </label>
                     
-                    <div class="space-y-4">
-                        {% for field in form %}
-                        <div>
-                            <label for="{{ field.id_for_label }}" class="block text-sm font-medium text-accent-700 dark:text-accent-300 mb-2">
-                                {% if field.name == 'username' %}
-                                    <i class="fas fa-user mr-2 text-primary-500"></i>
-                                {% elif field.name == 'email' %}
-                                    <i class="fas fa-envelope mr-2 text-primary-500"></i>
-                                {% elif 'password' in field.name %}
-                                    <i class="fas fa-lock mr-2 text-primary-500"></i>
-                                {% else %}
-                                    <i class="fas fa-edit mr-2 text-primary-500"></i>
-                                {% endif %}
-                                {{ field.label }}
-                            </label>
-                            
-                            <div class="relative">
-                                <input id="{{ field.id_for_label }}" 
-                                       name="{{ field.name }}" 
-                                       type="{{ field.field.widget.input_type }}" 
-                                       required 
-                                       class="input-field relative block w-full px-4 py-3 pl-11 border border-accent-300 dark:border-accent-600 placeholder-accent-400 text-accent-900 dark:text-white rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 dark:bg-accent-700/50 transition-all duration-300"
-                                       placeholder="{{ field.label }}"
-                                       {% if 'password' in field.name %}oninput="checkPasswordStrength(this)"{% endif %}>
-                                
-                                <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                                    {% if field.name == 'username' %}
-                                        <i class="fas fa-user text-accent-400"></i>
-                                    {% elif field.name == 'email' %}
-                                        <i class="fas fa-envelope text-accent-400"></i>
-                                    {% elif 'password' in field.name %}
-                                        <i class="fas fa-lock text-accent-400"></i>
-                                    {% else %}
-                                        <i class="fas fa-edit text-accent-400"></i>
-                                    {% endif %}
-                                </div>
-
-                                <!-- Password visibility toggle -->
-                                {% if 'password' in field.name %}
-                                <button type="button" 
-                                        class="absolute inset-y-0 right-0 pr-3 flex items-center text-accent-400 hover:text-primary-500 transition-colors password-toggle"
-                                        data-target="{{ field.id_for_label }}">
-                                    <i class="fas fa-eye"></i>
-                                </button>
-                                {% endif %}
-                            </div>
-
-                            <!-- Password strength indicator -->
-                            {% if 'password' in field.name and field.name == 'password1' %}
-                            <div class="mt-2">
-                                <div class="password-strength mb-1"></div>
-                                <div class="text-xs text-accent-500 password-strength-text"></div>
-                            </div>
+                    <div class="relative">
+                        <input id="{{ field.id_for_label }}" 
+                               name="{{ field.name }}" 
+                               type="{{ field.field.widget.input_type }}" 
+                               {% if field.field.required %}required{% endif %}
+                               class="input-field relative block w-full px-4 py-3 pl-11 border border-gray-300 dark:border-gray-700 placeholder-gray-400 text-gray-900 dark:text-white rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 dark:bg-[#1a1a1f] transition-all duration-300"
+                               placeholder="Enter your {{ field.label|lower }}"
+                               {% if 'password' in field.name %}onkeyup="checkPasswordStrength(this)"{% endif %}>
+                        
+                        <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                            {% if field.name == 'username' %}
+                                <i class="fas fa-user text-gray-400 dark:text-gray-500"></i>
+                            {% elif field.name == 'email' %}
+                                <i class="fas fa-envelope text-gray-400 dark:text-gray-500"></i>
+                            {% elif 'password' in field.name %}
+                                <i class="fas fa-lock text-gray-400 dark:text-gray-500"></i>
+                            {% else %}
+                                <i class="fas fa-edit text-gray-400 dark:text-gray-500"></i>
                             {% endif %}
-
-                            <!-- Field help text -->
-                            {% if field.help_text %}
-                                <p class="text-xs text-accent-500 dark:text-accent-400 mt-2 flex items-start">
-                                    <i class="fas fa-info-circle mr-1 mt-0.5 text-primary-500"></i>
-                                    {{ field.help_text|safe }}
-                                </p>
-                            {% endif %}
-
-                            <!-- Field errors -->
-                            {% for error in field.errors %}
-                                <p class="text-red-500 text-xs mt-2 flex items-center">
-                                    <i class="fas fa-exclamation-circle mr-1"></i>
-                                    {{ error }}
-                                </p>
-                            {% endfor %}
                         </div>
-                        {% endfor %}
-                    </div>
 
-                    <!-- Terms and Conditions -->
-                    <div class="flex items-center">
-                        <input id="terms" name="terms" type="checkbox" required
-                               class="h-4 w-4 text-primary-500 focus:ring-primary-500 border-accent-300 rounded">
-                        <label for="terms" class="ml-2 block text-sm text-accent-700 dark:text-accent-300">
-                            I agree to the 
-                            <a href="#" class="text-primary-500 hover:text-primary-600 font-medium">Terms of Service</a>
-                            and 
-                            <a href="#" class="text-primary-500 hover:text-primary-600 font-medium">Privacy Policy</a>
-                        </label>
-                    </div>
-
-                    <!-- Submit Button -->
-                    <div>
-                        <button type="submit" 
-                                class="group relative w-full flex justify-center items-center py-3 px-4 border border-transparent text-sm font-semibold rounded-xl text-white bg-primary-500 hover:bg-primary-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 transition-all duration-300">
-                            <i class="fas fa-user-plus mr-2"></i>
-                            Create Account
+                        <!-- Password visibility toggle -->
+                        {% if 'password' in field.name %}
+                        <button type="button" 
+                                class="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-primary-500 dark:text-gray-500 dark:hover:text-primary-400 transition-colors password-toggle"
+                                data-target="{{ field.id_for_label }}">
+                            <i class="fas fa-eye"></i>
                         </button>
+                        {% endif %}
                     </div>
 
-                    <!-- Login Link -->
-                    <div class="text-center pt-6 border-t border-accent-200 dark:border-accent-700">
-                        <p class="text-sm text-accent-600 dark:text-accent-400">
-                            Already have an account?
-                            <a href="{% url 'login' %}" class="font-semibold text-primary-500 hover:text-primary-600 transition-colors ml-1">
-                                Sign in here
-                            </a>
+                    <!-- Password strength indicator -->
+                    {% if field.name == 'password1' %}
+                    <div class="mt-2">
+                        <div class="password-strength mb-1"></div>
+                        <p class="text-xs text-gray-500 dark:text-gray-400 password-strength-text"></p>
+                    </div>
+                    {% endif %}
+
+                    <!-- Field help text -->
+                    {% if field.help_text %}
+                        <p class="text-xs text-gray-500 dark:text-gray-400 mt-2 flex items-start">
+                            <i class="fas fa-info-circle mr-1 mt-0.5 text-primary-500"></i>
+                            {{ field.help_text|safe }}
                         </p>
-                    </div>
-                </form>
-            </div>
-        </div>
-    </main>
+                    {% endif %}
 
-    <!-- ===== FOOTER ===== -->
-    <footer class="bg-accent-800 text-accent-200 py-8">
-        <div class="container mx-auto px-6">
-            <div class="flex flex-col md:flex-row justify-between items-center">
-                <div class="mb-4 md:mb-0">
-                    <a href="{% url 'home' %}" class="flex items-center space-x-3">
-                        <div class="p-2 bg-primary-500 rounded-lg">
-                            <img class="w-6 h-6" src="{% static 'images/logo.png' %}" alt="Ondrobit Logo">
-                        </div>
-                        <div>
-                            <span class="text-lg font-bold text-white block">Ondrobit</span>
-                            <span class="text-primary-400 font-semibold text-xs -mt-1 block">Ondrobit</span>
-                        </div>
-                    </a>
+                    <!-- Field errors -->
+                    {% for error in field.errors %}
+                        <p class="text-red-500 text-xs mt-2 flex items-center">
+                            <i class="fas fa-exclamation-circle mr-1"></i>
+                            {{ error }}
+                        </p>
+                    {% endfor %}
                 </div>
-                <div class="flex space-x-4">
-                    <a href="#" class="text-accent-300 hover:text-white transition-colors">
-                        <i class="fab fa-linkedin-in"></i>
-                    </a>
-                    <a href="#" class="text-accent-300 hover:text-white transition-colors">
-                        <i class="fab fa-twitter"></i>
-                    </a>
-                    <a href="#" class="text-accent-300 hover:text-white transition-colors">
-                        <i class="fab fa-github"></i>
-                    </a>
-                </div>
+                {% endfor %}
             </div>
-            <div class="border-t border-accent-700 mt-6 pt-6 text-center text-accent-400 text-sm">
-                <p>&copy; {% now "Y" %} Ondrobit. All rights reserved.</p>
+
+            <!-- Terms and Conditions -->
+            <div class="flex items-center">
+                <input id="terms" name="terms" type="checkbox" required
+                       class="h-4 w-4 text-primary-500 focus:ring-primary-500 border-gray-300 dark:border-gray-600 rounded bg-white dark:bg-[#1a1a1f]">
+                <label for="terms" class="ml-2 block text-sm text-gray-700 dark:text-gray-300">
+                    I agree to the 
+                    <a href="#" class="text-primary-500 hover:text-primary-600 dark:text-primary-400 dark:hover:text-primary-300 font-medium">Terms of Service</a>
+                    and 
+                    <a href="#" class="text-primary-500 hover:text-primary-600 dark:text-primary-400 dark:hover:text-primary-300 font-medium">Privacy Policy</a>
+                </label>
             </div>
-        </div>
-    </footer>
 
-    <!-- ===== SCRIPTS ===== -->
-    <script src="{% static 'js/script.js' %}"></script>
-    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
-    <script>
-        AOS.init({ 
-            duration: 800, 
-            once: true, 
-            offset: 50,
-            easing: 'ease-out-cubic'
-        });
+            <!-- Submit Button -->
+            <div>
+                <button type="submit" 
+                        class="group relative w-full flex justify-center items-center py-3 px-4 border border-transparent text-sm font-semibold rounded-xl text-white bg-gradient-to-r from-primary-500 to-primary-600 hover:from-primary-600 hover:to-primary-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 transition-all duration-300">
+                    <i class="fas fa-user-plus mr-2"></i>
+                    Create Account
+                </button>
+            </div>
 
+            <!-- Login Link -->
+            <div class="text-center pt-6 border-t border-gray-200 dark:border-gray-800">
+                <p class="text-sm text-gray-600 dark:text-gray-400">
+                    Already have an account?
+                    <a href="{% url 'login' %}" class="font-semibold text-primary-500 hover:text-primary-600 dark:text-primary-400 dark:hover:text-primary-300 transition-colors ml-1">
+                        Sign in here
+                    </a>
+                </p>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
         // Password visibility toggle
-        document.addEventListener('DOMContentLoaded', function() {
-            const toggleButtons = document.querySelectorAll('.password-toggle');
-            
-            toggleButtons.forEach(button => {
-                button.addEventListener('click', function() {
-                    const targetId = this.getAttribute('data-target');
-                    const passwordInput = document.getElementById(targetId);
-                    const icon = this.querySelector('i');
-                    
+        const toggleButtons = document.querySelectorAll('.password-toggle');
+        
+        toggleButtons.forEach(button => {
+            button.addEventListener('click', function() {
+                const targetId = this.getAttribute('data-target');
+                const passwordInput = document.getElementById(targetId);
+                const icon = this.querySelector('i');
+                
+                if (passwordInput) {
                     if (passwordInput.type === 'password') {
                         passwordInput.type = 'text';
                         icon.classList.remove('fa-eye');
@@ -382,67 +205,78 @@
                         icon.classList.remove('fa-eye-slash');
                         icon.classList.add('fa-eye');
                     }
-                });
-            });
-        });
-
-        // Password strength checker
-        function checkPasswordStrength(input) {
-            const password = input.value;
-            const strengthBar = input.parentElement.nextElementSibling?.querySelector('.password-strength');
-            const strengthText = input.parentElement.nextElementSibling?.querySelector('.password-strength-text');
-            
-            if (!strengthBar || !strengthText) return;
-
-            let strength = 0;
-            let text = '';
-
-            // Check password length
-            if (password.length >= 8) strength += 25;
-            if (password.length >= 12) strength += 25;
-
-            // Check for character variety
-            if (password.match(/[a-z]/) && password.match(/[A-Z]/)) strength += 25;
-            if (password.match(/\d/)) strength += 15;
-            if (password.match(/[^a-zA-Z\d]/)) strength += 10;
-
-            // Update strength bar and text
-            strengthBar.className = 'password-strength';
-            
-            if (password.length === 0) {
-                strengthBar.classList.add('password-weak');
-                text = '';
-            } else if (strength < 50) {
-                strengthBar.classList.add('password-weak');
-                text = 'Weak password';
-            } else if (strength < 75) {
-                strengthBar.classList.add('password-fair');
-                text = 'Fair password';
-            } else if (strength < 90) {
-                strengthBar.classList.add('password-good');
-                text = 'Good password';
-            } else {
-                strengthBar.classList.add('password-strong');
-                text = 'Strong password';
-            }
-
-            strengthText.textContent = text;
-        }
-
-        // Form validation enhancement
-        document.addEventListener('DOMContentLoaded', function() {
-            const form = document.querySelector('form');
-            const submitButton = form.querySelector('button[type="submit"]');
-            
-            form.addEventListener('submit', function(e) {
-                const terms = document.getElementById('terms');
-                if (!terms.checked) {
-                    e.preventDefault();
-                    alert('Please agree to the Terms of Service and Privacy Policy');
-                    terms.focus();
                 }
             });
         });
-    </script>
-</body>
-</html>
+
+        // Form validation enhancement
+        const form = document.querySelector('form');
+        const submitButton = form?.querySelector('button[type="submit"]');
+        
+        form?.addEventListener('submit', function(e) {
+            const terms = document.getElementById('terms');
+            if (!terms.checked) {
+                e.preventDefault();
+                alert('Please agree to the Terms of Service and Privacy Policy');
+                terms.focus();
+            }
+        });
+
+        // Add floating animation to background elements
+        const bgElements = document.querySelectorAll('.absolute.inset-0 .rounded-full');
+        bgElements.forEach((element, index) => {
+            element.style.animation = `float ${8 + index * 2}s ease-in-out infinite`;
+        });
+    });
+
+    // Password strength checker
+    function checkPasswordStrength(input) {
+        const password = input.value;
+        const strengthBar = input.closest('div')?.parentElement?.querySelector('.password-strength');
+        const strengthText = input.closest('div')?.parentElement?.querySelector('.password-strength-text');
+        
+        if (!strengthBar || !strengthText) return;
+
+        let strength = 0;
+
+        // Check password criteria
+        if (password.length >= 8) strength += 25;
+        if (password.length >= 12) strength += 15;
+        if (password.match(/[a-z]/) && password.match(/[A-Z]/)) strength += 25;
+        if (password.match(/\d/)) strength += 20;
+        if (password.match(/[^a-zA-Z\d]/)) strength += 15;
+
+        // Update strength bar and text
+        strengthBar.className = 'password-strength';
+        
+        if (password.length === 0) {
+            strengthBar.classList.add('password-weak');
+            strengthText.textContent = '';
+        } else if (strength < 40) {
+            strengthBar.classList.add('password-weak');
+            strengthText.textContent = 'Weak password';
+            strengthText.className = 'text-xs text-red-500 dark:text-red-400 password-strength-text';
+        } else if (strength < 60) {
+            strengthBar.classList.add('password-fair');
+            strengthText.textContent = 'Fair password';
+            strengthText.className = 'text-xs text-yellow-500 dark:text-yellow-400 password-strength-text';
+        } else if (strength < 80) {
+            strengthBar.classList.add('password-good');
+            strengthText.textContent = 'Good password';
+            strengthText.className = 'text-xs text-green-500 dark:text-green-400 password-strength-text';
+        } else {
+            strengthBar.classList.add('password-strong');
+            strengthText.textContent = 'Strong password';
+            strengthText.className = 'text-xs text-green-500 dark:text-green-400 password-strength-text';
+        }
+    }
+
+    // Auto-check password strength on page load if field has value
+    window.addEventListener('load', function() {
+        const passwordField = document.getElementById('id_password1');
+        if (passwordField && passwordField.value) {
+            checkPasswordStrength(passwordField);
+        }
+    });
+</script>
+{% endblock %}

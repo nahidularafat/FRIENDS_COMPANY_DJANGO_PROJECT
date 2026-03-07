@@ -1,353 +1,169 @@
+{% extends 'base.html' %}
 {% load static %}
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login - Ondrobit</title>
+
+{% block title %}Login - Ondrobit{% endblock %}
+
+{% block extra_css %}
+<style>
+    .login-card {
+        background: rgba(255, 255, 255, 0.95);
+        backdrop-filter: blur(20px);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+    }
+    .dark .login-card {
+        background: rgba(26, 26, 31, 0.95);
+        border: 1px solid rgba(255, 255, 255, 0.05);
+    }
+    .input-field {
+        transition: all 0.3s ease;
+    }
+    .input-field:focus {
+        transform: translateY(-2px);
+        box-shadow: 0 10px 25px -5px rgba(255, 77, 77, 0.2);
+    }
+    .gradient-bg {
+        background: linear-gradient(135deg, #ff4d4d 0%, #e63e3e 50%, #cc2e2e 100%);
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="min-h-screen flex items-center justify-center gradient-bg py-12 px-4 sm:px-6 lg:px-8 relative overflow-hidden">
+    <!-- Background Elements -->
+    <div class="absolute inset-0 overflow-hidden">
+        <div class="absolute -top-24 -right-24 w-64 h-64 bg-white opacity-10 rounded-full"></div>
+        <div class="absolute -bottom-32 -left-32 w-80 h-80 bg-white opacity-10 rounded-full"></div>
+        <div class="absolute top-1/2 right-1/4 w-40 h-40 bg-white opacity-10 rounded-full"></div>
+        <div class="absolute bottom-1/3 left-1/4 w-32 h-32 bg-white opacity-10 rounded-full"></div>
+        <div class="absolute top-1/4 left-1/3 w-24 h-24 bg-white opacity-5 rounded-full"></div>
+    </div>
     
-    <!-- Tailwind CSS -->
-    <script src="https://cdn.tailwindcss.com/3.4.3"></script>
-    <script>
-        tailwind.config = {
-            darkMode: 'class',
-            theme: {
-                extend: {
-                    colors: {
-                        primary: {
-                            50: '#f0f9ff',
-                            100: '#e0f2fe',
-                            500: '#0ea5e9',
-                            600: '#0284c7',
-                            700: '#0369a1',
-                            800: '#075985',
-                            900: '#0c4a6e',
-                        },
-                        accent: {
-                            50: '#f8fafc',
-                            100: '#f1f5f9',
-                            200: '#e2e8f0',
-                            300: '#cbd5e1',
-                            400: '#94a3b8',
-                            500: '#64748b',
-                            600: '#475569',
-                            700: '#334155',
-                            800: '#1e293b',
-                            900: '#0f172a',
-                        }
-                    },
-                    fontFamily: {
-                        'sans': ['Inter', 'system-ui', 'sans-serif'],
-                    }
-                }
-            }
-        }
-    </script>
+    <!-- Login Card -->
+    <div class="login-card max-w-md w-full space-y-8 p-8 sm:p-10 rounded-2xl shadow-2xl relative z-10" data-aos="fade-up">
+        <!-- Header -->
+        <div class="text-center">
+            <div class="mx-auto w-20 h-20 bg-gradient-to-r from-primary-500 to-primary-600 rounded-2xl flex items-center justify-center mb-6 shadow-lg">
+                <i class="fas fa-lock text-white text-2xl"></i>
+            </div>
+            <h2 class="text-3xl font-bold text-gray-900 dark:text-white mb-2">
+                Welcome Back
+            </h2>
+            <p class="text-gray-600 dark:text-gray-400">
+                Sign in to your Ondrobit account
+            </p>
+        </div>
 
-    <!-- Google Fonts -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-
-    <!-- Favicon -->
-    <link rel="icon" type="image/png" href="{% static 'images/icon.png' %}">
-
-    <!-- Font Awesome -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-
-    <!-- Custom CSS -->
-    <style>
-        .glass-effect {
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(10px);
-            border-bottom: 1px solid rgba(0, 0, 0, 0.1);
-        }
-        .dark .glass-effect {
-            background: rgba(15, 23, 42, 0.95);
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-        }
-        .nav-link {
-            position: relative;
-        }
-        .nav-link::after {
-            content: '';
-            position: absolute;
-            width: 0;
-            height: 2px;
-            bottom: -4px;
-            left: 0;
-            background-color: #0ea5e9;
-            transition: width 0.3s ease;
-        }
-        .nav-link:hover::after {
-            width: 100%;
-        }
-        .gradient-bg {
-            background: linear-gradient(135deg, #0ea5e9 0%, #0369a1 50%, #0c4a6e 100%);
-        }
-        .login-card {
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(20px);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-        }
-        .dark .login-card {
-            background: rgba(15, 23, 42, 0.95);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-        }
-        .input-field {
-            transition: all 0.3s ease;
-        }
-        .input-field:focus {
-            transform: translateY(-2px);
-            box-shadow: 0 10px 25px -5px rgba(14, 165, 233, 0.2);
-        }
-    </style>
-</head>
-
-<body class="bg-white dark:bg-accent-900 text-accent-800 dark:text-accent-100 font-sans transition-colors duration-300">
-
-    <!-- ===== HEADER ===== -->
-    <header class="glass-effect fixed w-full z-50 shadow-sm">
-        <nav class="container mx-auto px-6 py-4 flex justify-between items-center">
+        <!-- Login Form -->
+        <form class="mt-8 space-y-6" method="POST">
+            {% csrf_token %}
+            <input type="hidden" name="next" value="{{ next }}">
             
-            <!-- Logo -->
-            <a href="{% url 'home' %}" class="flex items-center space-x-3 group">
-                <div class="p-2 bg-primary-500 rounded-lg group-hover:bg-primary-600 transition-colors shadow-md">
-                    <img class="w-8 h-8" src="{% static 'images/logo.png' %}" alt="Ondrobit-IT Logo">
-                </div>
+            <div class="space-y-4">
+                <!-- Username Field -->
                 <div>
-                    <span class="text-xl font-bold text-accent-800 dark:text-white block">Ondrobit</span>
-                    <span class="text-primary-500 font-semibold text-sm -mt-1 block">Ondrobit</span>
+                    <label for="id_username" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                        <i class="fas fa-user mr-2 text-primary-500"></i>Username
+                    </label>
+                    <div class="relative">
+                        <input id="id_username" name="username" type="text" autocomplete="username" required 
+                               class="input-field relative block w-full px-4 py-3 pl-11 border border-gray-300 dark:border-gray-700 placeholder-gray-400 text-gray-900 dark:text-white rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 dark:bg-[#1a1a1f] transition-all duration-300"
+                               placeholder="Enter your username">
+                        <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                            <i class="fas fa-user text-gray-400 dark:text-gray-500"></i>
+                        </div>
+                    </div>
                 </div>
-            </a>
 
-            <!-- Navbar Links -->
-            <div class="hidden md:flex items-center space-x-8 font-medium">
-                <a href="{% url 'home' %}" class="nav-link text-accent-700 dark:text-accent-200 hover:text-primary-500 font-semibold">Home</a>
-                <a href="{% url 'services' %}" class="nav-link text-accent-700 dark:text-accent-200 hover:text-primary-500 font-semibold">Services</a>
-                <a href="{% url 'blog' %}" class="nav-link text-accent-700 dark:text-accent-200 hover:text-primary-500 font-semibold">Blog</a>
-                <a href="{% url 'about_us' %}" class="nav-link text-accent-700 dark:text-accent-200 hover:text-primary-500 font-semibold">About Us</a>
-                <a href="{% url 'review_page' %}" class="nav-link text-accent-700 dark:text-accent-200 hover:text-primary-500 font-semibold">Reviews</a>
+                <!-- Password Field -->
+                <div>
+                    <label for="id_password" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                        <i class="fas fa-key mr-2 text-primary-500"></i>Password
+                    </label>
+                    <div class="relative">
+                        <input id="id_password" name="password" type="password" autocomplete="current-password" required 
+                               class="input-field relative block w-full px-4 py-3 pl-11 border border-gray-300 dark:border-gray-700 placeholder-gray-400 text-gray-900 dark:text-white rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 dark:bg-[#1a1a1f] transition-all duration-300"
+                               placeholder="Enter your password">
+                        <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                            <i class="fas fa-key text-gray-400 dark:text-gray-500"></i>
+                        </div>
+                    </div>
+                </div>
             </div>
 
-            <!-- Buttons -->
-            <div class="flex items-center space-x-4">
+            <!-- Error Messages -->
+            {% if form.errors %}
+                <div class="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-xl p-4">
+                    <div class="flex items-center">
+                        <i class="fas fa-exclamation-triangle text-red-500 mr-3"></i>
+                        <div class="text-sm text-red-700 dark:text-red-300">
+                            Your username and password didn't match. Please try again.
+                        </div>
+                    </div>
+                </div>
+            {% endif %}
 
-                <!-- Theme Toggle -->
-                <button id="theme-toggle" type="button"
-                    class="text-accent-500 dark:text-accent-400 hover:bg-accent-100 dark:hover:bg-accent-800
-                    focus:outline-none focus:ring-2 focus:ring-primary-500 rounded-lg p-2.5 transition-colors">
-                    <svg id="theme-toggle-dark-icon" class="hidden w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
-                        <path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z"></path>
-                    </svg>
-                    <svg id="theme-toggle-light-icon" class="hidden w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
-                        <path fill-rule="evenodd" clip-rule="evenodd"
-                            d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 
-                            0 011-1zm4 8a4 4 0 11-8 0 4 4 
-                            0 018 0zM4 11a1 1 0 100-2H3a1 1 
-                            0 000 2h1z">
-                        </path>
-                    </svg>
+            <!-- Remember Me & Forgot Password -->
+            <div class="flex items-center justify-between">
+                <div class="flex items-center">
+                    <input id="remember_me" name="remember_me" type="checkbox" 
+                           class="h-4 w-4 text-primary-500 focus:ring-primary-500 border-gray-300 dark:border-gray-600 rounded bg-white dark:bg-[#1a1a1f]">
+                    <label for="remember_me" class="ml-2 block text-sm text-gray-700 dark:text-gray-300">
+                        Remember me
+                    </label>
+                </div>
+
+                <div class="text-sm">
+                    <a href="#" class="font-medium text-primary-500 hover:text-primary-600 dark:text-primary-400 dark:hover:text-primary-300 transition-colors">
+                        Forgot your password?
+                    </a>
+                </div>
+            </div>
+
+            <!-- Submit Button -->
+            <div>
+                <button type="submit" 
+                        class="group relative w-full flex justify-center items-center py-3 px-4 border border-transparent text-sm font-semibold rounded-xl text-white bg-gradient-to-r from-primary-500 to-primary-600 hover:from-primary-600 hover:to-primary-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 transition-all duration-300">
+                    <i class="fas fa-sign-in-alt mr-2"></i>
+                    Sign in to your account
                 </button>
-
-                {% if user.is_authenticated %}
-                    {% if user.profile.role == 'SUPERADMIN' %}
-                        <a href="{% url 'dashboard' %}"
-                           class="bg-primary-500 hover:bg-primary-600 text-white px-4 py-2.5 rounded-lg font-semibold transition-all shadow-md hover:shadow-lg flex items-center">
-                            <i class="fas fa-tachometer-alt mr-2"></i>Dashboard
-                        </a>
-                    {% endif %}
-                    <a href="{% url 'logout' %}"
-                       class="bg-accent-200 hover:bg-accent-300 text-accent-800 dark:bg-accent-700 dark:hover:bg-accent-600 dark:text-accent-100 px-4 py-2.5 rounded-lg font-semibold transition-all flex items-center">
-                        <i class="fas fa-sign-out-alt mr-2"></i>Logout
-                    </a>
-                {% else %}
-                    <a href="{% url 'login' %}"
-                       class="bg-primary-500 hover:bg-primary-600 text-white px-6 py-2.5 rounded-lg font-semibold transition-all shadow-md hover:shadow-lg flex items-center">
-                        <i class="fas fa-sign-in-alt mr-2"></i>Login
-                    </a>
-                {% endif %}
             </div>
-        </nav>
-    </header>
 
-    <!-- ===== MAIN CONTENT ===== -->
-    <main class="pt-20">
-        <div class="min-h-screen flex items-center justify-center gradient-bg py-12 px-4 sm:px-6 lg:px-8 relative overflow-hidden">
-            <!-- Background Elements -->
-            <div class="absolute inset-0 overflow-hidden">
-                <div class="absolute -top-24 -right-24 w-64 h-64 bg-white opacity-10 rounded-full"></div>
-                <div class="absolute -bottom-32 -left-32 w-80 h-80 bg-white opacity-10 rounded-full"></div>
-                <div class="absolute top-1/2 right-1/4 w-40 h-40 bg-white opacity-10 rounded-full"></div>
-                <div class="absolute bottom-1/3 left-1/4 w-32 h-32 bg-white opacity-10 rounded-full"></div>
+            <!-- Registration Link -->
+            <div class="text-center pt-6 border-t border-gray-200 dark:border-gray-800">
+                <p class="text-sm text-gray-600 dark:text-gray-400">
+                    Don't have an account?
+                    <a href="{% url 'register' %}" class="font-semibold text-primary-500 hover:text-primary-600 dark:text-primary-400 dark:hover:text-primary-300 transition-colors ml-1">
+                        Create one here
+                    </a>
+                </p>
             </div>
-            
-            <!-- Login Card -->
-            <div class="login-card max-w-md w-full space-y-8 p-10 rounded-2xl shadow-2xl relative z-10" data-aos="fade-up">
-                <!-- Header -->
-                <div class="text-center">
-                    <div class="mx-auto w-20 h-20 bg-primary-500 rounded-2xl flex items-center justify-center mb-6 shadow-lg">
-                        <i class="fas fa-lock text-white text-2xl"></i>
-                    </div>
-                    <h2 class="text-3xl font-bold text-accent-800 dark:text-white mb-2">
-                        Welcome Back
-                    </h2>
-                    <p class="text-accent-600 dark:text-accent-300">
-                        Sign in to your Ondrobit account
-                    </p>
-                </div>
+        </form>
 
-                <!-- Login Form -->
-                <form class="mt-8 space-y-6" method="POST">
-                    {% csrf_token %}
-                    <input type="hidden" name="next" value="{{ next }}">
-                    
-                    <div class="space-y-4">
-                        <!-- Username Field -->
-                        <div>
-                            <label for="id_username" class="block text-sm font-medium text-accent-700 dark:text-accent-300 mb-2">
-                                <i class="fas fa-user mr-2 text-primary-500"></i>Username
-                            </label>
-                            <div class="relative">
-                                <input id="id_username" name="username" type="text" autocomplete="username" required 
-                                       class="input-field relative block w-full px-4 py-3 pl-11 border border-accent-300 dark:border-accent-600 placeholder-accent-400 text-accent-900 dark:text-white rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 dark:bg-accent-700/50 transition-all duration-300"
-                                       placeholder="Enter your username">
-                                <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                                    <i class="fas fa-user text-accent-400"></i>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Password Field -->
-                        <div>
-                            <label for="id_password" class="block text-sm font-medium text-accent-700 dark:text-accent-300 mb-2">
-                                <i class="fas fa-key mr-2 text-primary-500"></i>Password
-                            </label>
-                            <div class="relative">
-                                <input id="id_password" name="password" type="password" autocomplete="current-password" required 
-                                       class="input-field relative block w-full px-4 py-3 pl-11 border border-accent-300 dark:border-accent-600 placeholder-accent-400 text-accent-900 dark:text-white rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 dark:bg-accent-700/50 transition-all duration-300"
-                                       placeholder="Enter your password">
-                                <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                                    <i class="fas fa-key text-accent-400"></i>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Error Messages -->
-                    {% if form.errors %}
-                        <div class="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-xl p-4">
-                            <div class="flex items-center">
-                                <i class="fas fa-exclamation-triangle text-red-500 mr-3"></i>
-                                <div class="text-sm text-red-700 dark:text-red-300">
-                                    Your username and password didn't match. Please try again.
-                                </div>
-                            </div>
-                        </div>
-                    {% endif %}
-
-                    <!-- Remember Me & Forgot Password -->
-                    <div class="flex items-center justify-between">
-                        <div class="flex items-center">
-                            <input id="remember_me" name="remember_me" type="checkbox" 
-                                   class="h-4 w-4 text-primary-500 focus:ring-primary-500 border-accent-300 rounded">
-                            <label for="remember_me" class="ml-2 block text-sm text-accent-700 dark:text-accent-300">
-                                Remember me
-                            </label>
-                        </div>
-
-                        <div class="text-sm">
-                            <a href="#" class="font-medium text-primary-500 hover:text-primary-600 transition-colors">
-                                Forgot your password?
-                            </a>
-                        </div>
-                    </div>
-
-                    <!-- Submit Button -->
-                    <div>
-                        <button type="submit" 
-                                class="group relative w-full flex justify-center items-center py-3 px-4 border border-transparent text-sm font-semibold rounded-xl text-white bg-primary-500 hover:bg-primary-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 transition-all duration-300">
-                            <i class="fas fa-sign-in-alt mr-2"></i>
-                            Sign in to your account
-                        </button>
-                    </div>
-
-                    <!-- Registration Link -->
-                    <div class="text-center pt-6 border-t border-accent-200 dark:border-accent-700">
-                        <p class="text-sm text-accent-600 dark:text-accent-400">
-                            Don't have an account?
-                            <a href="{% url 'register' %}" class="font-semibold text-primary-500 hover:text-primary-600 transition-colors ml-1">
-                                Create one here
-                            </a>
-                        </p>
-                    </div>
-                </form>
-
-                <!-- Demo Credentials (Optional - Remove in production) -->
-                <div class="mt-6 p-4 bg-accent-50 dark:bg-accent-800/50 rounded-xl border border-accent-200 dark:border-accent-700">
-                    <h4 class="text-sm font-semibold text-accent-700 dark:text-accent-300 mb-2 flex items-center">
-                        <i class="fas fa-info-circle mr-2 text-primary-500"></i>
-                        Demo Access
-                    </h4>
-                    <div class="text-xs text-accent-600 dark:text-accent-400 space-y-1">
-                        <div><span class="font-medium">Username:</span> demo_user</div>
-                        <div><span class="font-medium">Password:</span> demo1234</div>
-                    </div>
-                </div>
+        <!-- Demo Credentials (Optional - Remove in production) -->
+        <div class="mt-6 p-4 bg-gray-50 dark:bg-[#1a1a1f] rounded-xl border border-gray-200 dark:border-gray-800">
+            <h4 class="text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2 flex items-center">
+                <i class="fas fa-info-circle mr-2 text-primary-500"></i>
+                Demo Access
+            </h4>
+            <div class="text-xs text-gray-600 dark:text-gray-400 space-y-1">
+                <div><span class="font-medium">Username:</span> demo_user</div>
+                <div><span class="font-medium">Password:</span> demo1234</div>
             </div>
         </div>
-    </main>
+    </div>
+</div>
+{% endblock %}
 
-    <!-- ===== FOOTER ===== -->
-    <footer class="bg-accent-800 text-accent-200 py-8">
-        <div class="container mx-auto px-6">
-            <div class="flex flex-col md:flex-row justify-between items-center">
-                <div class="mb-4 md:mb-0">
-                    <a href="{% url 'home' %}" class="flex items-center space-x-3">
-                        <div class="p-2 bg-primary-500 rounded-lg">
-                            <img class="w-6 h-6" src="{% static 'images/logo.png' %}" alt="Ondrobit Logo">
-                        </div>
-                        <div>
-                            <span class="text-lg font-bold text-white block">Ondrobit</span>
-                            <span class="text-primary-400 font-semibold text-xs -mt-1 block">Ondrobit</span>
-                        </div>
-                    </a>
-                </div>
-                <div class="flex space-x-4">
-                    <a href="#" class="text-accent-300 hover:text-white transition-colors">
-                        <i class="fab fa-linkedin-in"></i>
-                    </a>
-                    <a href="#" class="text-accent-300 hover:text-white transition-colors">
-                        <i class="fab fa-twitter"></i>
-                    </a>
-                    <a href="#" class="text-accent-300 hover:text-white transition-colors">
-                        <i class="fab fa-github"></i>
-                    </a>
-                </div>
-            </div>
-            <div class="border-t border-accent-700 mt-6 pt-6 text-center text-accent-400 text-sm">
-                <p>&copy; {% now "Y" %} Ondrobit. All rights reserved.</p>
-            </div>
-        </div>
-    </footer>
-
-    <!-- ===== SCRIPTS ===== -->
-    <script src="{% static 'js/script.js' %}"></script>
-    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
-    <script>
-        AOS.init({ 
-            duration: 800, 
-            once: true, 
-            offset: 50,
-            easing: 'ease-out-cubic'
-        });
-
-        // Enhanced password visibility toggle
-        document.addEventListener('DOMContentLoaded', function() {
-            const passwordInput = document.getElementById('id_password');
+{% block extra_js %}
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Password visibility toggle
+        const passwordInput = document.getElementById('id_password');
+        
+        if (passwordInput) {
             const passwordToggle = document.createElement('button');
             passwordToggle.type = 'button';
-            passwordToggle.className = 'absolute inset-y-0 right-0 pr-3 flex items-center text-accent-400 hover:text-primary-500 transition-colors';
+            passwordToggle.className = 'absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-primary-500 dark:text-gray-500 dark:hover:text-primary-400 transition-colors';
             passwordToggle.innerHTML = '<i class="fas fa-eye"></i>';
             
             passwordInput.parentNode.appendChild(passwordToggle);
@@ -357,7 +173,25 @@
                 passwordInput.setAttribute('type', type);
                 this.innerHTML = type === 'password' ? '<i class="fas fa-eye"></i>' : '<i class="fas fa-eye-slash"></i>';
             });
+        }
+
+        // Add floating animation to background elements
+        const bgElements = document.querySelectorAll('.absolute.inset-0 .rounded-full');
+        bgElements.forEach((element, index) => {
+            element.style.animation = `float ${8 + index * 2}s ease-in-out infinite`;
         });
-    </script>
-</body>
-</html>
+    });
+
+    // Add floating animation keyframes
+    const style = document.createElement('style');
+    style.textContent = `
+        @keyframes float {
+            0%, 100% { transform: translateY(0px) translateX(0px); }
+            25% { transform: translateY(-20px) translateX(10px); }
+            50% { transform: translateY(0px) translateX(20px); }
+            75% { transform: translateY(20px) translateX(10px); }
+        }
+    `;
+    document.head.appendChild(style);
+</script>
+{% endblock %}
