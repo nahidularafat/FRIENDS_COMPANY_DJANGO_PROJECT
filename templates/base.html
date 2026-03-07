@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
-    <title>{% block title %}IT-SOLUTION - Innovative Software Solutions{% endblock %}</title>
+    <title>{% block title %}Ondrobit - Innovative Software Solutions{% endblock %}</title>
 
     <!-- Dark Mode Script - MUST RUN BEFORE TAILWIND -->
     <script>
@@ -55,7 +55,9 @@
 
     <!-- AOS -->
     <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
-
+    <!-- Add to your base.html head section -->
+<link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+<script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
     <!-- Custom CSS -->
     <style>
         .gradient-bg { background: linear-gradient(135deg, #0ea5e9 0%, #0369a1 50%, #0c4a6e 100%); }
@@ -205,32 +207,32 @@
                 <div class="mb-6 md:mb-0">
                     <a href="{% url 'home' %}" class="flex items-center space-x-2 sm:space-x-3 justify-center md:justify-start">
                         <div class="p-1.5 sm:p-2 bg-primary-500 rounded-lg">
-                            <img class="w-5 h-5 sm:w-6 sm:h-6" src="{% static 'images/logo.png' %}" alt="IT-SOLUTION Logo">
+                            <img class="w-5 h-5 sm:w-6 sm:h-6" src="{% static 'images/logo.png' %}" alt="Ondrobit Logo">
                         </div>
                         <div>
-                            <span class="text-lg sm:text-xl font-bold text-white block">IT-SOLUTION</span>
+                            <span class="text-lg sm:text-xl font-bold text-white block">Ondrobit</span>
                             <span class="text-primary-400 font-semibold text-xs sm:text-sm -mt-1 block">Ondrobit</span>
                         </div>
                     </a>
                     <p class="mt-3 sm:mt-4 text-accent-300 max-w-md text-sm sm:text-base px-4 md:px-0">Innovative software solutions to transform your business and drive growth in the digital age.</p>
                 </div>
                 <div class="flex space-x-4 sm:space-x-6">
-                    <a href="#" class="text-accent-300 hover:text-white transition-colors">
+                    <a href="https://www.linkedin.com/in/nahidul-arafat-9ab8332ba?fbclid=IwY2xjawQZLmtleHRuA2FlbQIxMABicmlkETFMR3RBUnZwSHB2cURuVGp5c3J0YwZhcHBfaWQQMjIyMDM5MTc4ODIwMDg5MgABHkgxn_me3SpOcZqTqJdhdZARtfIAjsYGzDFhhRK2h19YKjAUpnvH_IO-kGcF_aem_87JL5KR0AVHYLyGA8wokLg" class="text-accent-300 hover:text-white transition-colors">
                         <i class="fab fa-linkedin-in text-lg sm:text-xl"></i>
                     </a>
                     <a href="#" class="text-accent-300 hover:text-white transition-colors">
                         <i class="fab fa-twitter text-lg sm:text-xl"></i>
                     </a>
-                    <a href="#" class="text-accent-300 hover:text-white transition-colors">
+                    <a href="https://github.com/nahidularafat" class="text-accent-300 hover:text-white transition-colors">
                         <i class="fab fa-github text-lg sm:text-xl"></i>
                     </a>
-                    <a href="#" class="text-accent-300 hover:text-white transition-colors">
+                    <a href="https://www.facebook.com/ondrobit" class="text-accent-300 hover:text-white transition-colors"> 
                         <i class="fab fa-facebook-f text-lg sm:text-xl"></i>
                     </a>
                 </div>
             </div>
             <div class="border-t border-accent-700 mt-6 sm:mt-8 pt-6 sm:pt-8 text-center text-accent-400">
-                <p class="text-xs sm:text-sm">&copy; {% now "Y" %} IT-SOLUTION. All rights reserved.</p>
+                <p class="text-xs sm:text-sm">&copy; {% now "Y" %} Ondrobit. All rights reserved.</p>
             </div>
         </div>
     </footer>
@@ -293,6 +295,7 @@ document.addEventListener("DOMContentLoaded", function () {
             }
         });
     </script>
+    
 
     {% block extra_js %}{% endblock %}
 </body>
