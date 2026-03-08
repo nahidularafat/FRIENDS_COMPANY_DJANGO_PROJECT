@@ -99,9 +99,14 @@ class Profile(models.Model):
 @receiver(post_save, sender=User)
 def create_user_profile(sender, instance, created, **kwargs):
     if created:
-        Profile.objects.create(user=instance, role='CLIENT') # Default role is Client
+        db = instance._state.db  # যে database এ User save হয়েছে
+        Profile.objects.using(db).create(
+            user=instance,
+            role='CLIENT'
+        )
 
 @receiver(post_save, sender=User)
 def save_user_profile(sender, instance, **kwargs):
+    db = instance._state.db
     if hasattr(instance, 'profile'):
-        instance.profile.save()
+        instance.profile.save(using=db)
