@@ -14,7 +14,8 @@ from .forms import (
 from .models import Service, BlogPost, Developer, Review, Profile, Client
 from .models import ContactInfo, ContactMessage
 from django.contrib.auth.models import User
-
+from .forms import ContactInfoForm
+from .models import ContactInfo
 # --- Decorators ---
 def superadmin_required(function):
     def wrap(request, *args, **kwargs):

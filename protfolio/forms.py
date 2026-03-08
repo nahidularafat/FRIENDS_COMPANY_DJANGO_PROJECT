@@ -1,7 +1,6 @@
 # file path: protfolio/forms.py
 from .models import Developer, Review, Service, BlogPost, Client, ContactInfo
 from django import forms
-from .models import Developer, Review, Service, BlogPost, Client
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
 
