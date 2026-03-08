@@ -278,33 +278,7 @@ Closed on Friday & Saturday
 </div>
             
             <!-- Hours of Operation Card -->
-            <div class="group relative bg-white dark:bg-[#1a1a1f] rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-300 hover:-translate-y-2 overflow-hidden border border-gray-100 dark:border-gray-800">
-                <div class="absolute inset-0 pointer-events-none bg-gradient-to-br from-primary-500/0 to-primary-500/0 group-hover:from-primary-500/5 group-hover:to-primary-600/5 transition-all duration-500"></div>
-                <div class="bg-gradient-to-r from-primary-500 to-primary-600 p-6">
-                    <div class="w-16 h-16 bg-white/20 backdrop-blur-sm rounded-2xl flex items-center justify-center mx-auto border-2 border-white/30">
-                        <i class="fas fa-clock text-white text-3xl"></i>
-                    </div>
-                </div>
-                
-                <div class="p-8 text-center">
-                    <h3 class="text-2xl font-bold text-gray-900 dark:text-white mb-4">Hours of Operation</h3>
-                    <p class="text-gray-600 dark:text-gray-400 font-medium mb-2">Sunday - Thursday</p>
-                    <p class="text-2xl font-bold text-primary-500">09:00am - 5:00pm</p>
-                    <p class="text-sm text-gray-500 dark:text-gray-500 mt-4">Closed on Friday & Saturday</p>
-                    
-                    <!-- Admin Controls for Hours (if you have a model for hours) -->
-                    {% if user.is_authenticated and user.profile.role == 'SUPERADMIN' %}
-                    <div class="flex items-center justify-center gap-3 mt-6 pt-4 border-t border-gray-200 dark:border-gray-800">
-                        <a href="#" 
-                           class="inline-flex items-center bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg text-sm font-medium transition-all shadow hover:shadow-md">
-                            <i class="fas fa-edit mr-1"></i> Edit Hours
-                        </a>
-                    </div>
-                    {% endif %}
-                    
-                    <div class="w-20 h-1 bg-primary-500 mx-auto mt-6 rounded-full"></div>
-                </div>
-            </div>
+            
         </div>
         
         <!-- GET IN TOUCH Section with Form -->
