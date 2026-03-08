@@ -1,5 +1,5 @@
 # file path: protfolio/forms.py
-
+from .models import Developer, Review, Service, BlogPost, Client, ContactInfo
 from django import forms
 from .models import Developer, Review, Service, BlogPost, Client
 from django.contrib.auth.forms import UserCreationForm
@@ -21,7 +21,7 @@ class ReviewForm(forms.ModelForm):
 class DeveloperForm(forms.ModelForm):
     class Meta:
         model = Developer
-        fields = ['name', 'position', 'experience', 'image', 'bio', 'cv_url']
+        fields = ['name', 'position', 'experience', 'image', 'bio', 'linked_in_url']
 
 class ServiceForm(forms.ModelForm):
     class Meta:
@@ -37,3 +37,8 @@ class ClientForm(forms.ModelForm):
     class Meta:
         model = Client
         fields = ['name', 'logo', 'website_url', 'display_order']
+
+class ContactInfoForm(forms.ModelForm):
+    class Meta:
+        model = ContactInfo
+        fields = ['address', 'phone', 'whatsapp', 'email']        

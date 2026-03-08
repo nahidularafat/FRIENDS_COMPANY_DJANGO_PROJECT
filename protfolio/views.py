@@ -3,7 +3,10 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
-
+from .forms import (
+    CustomUserCreationForm, ReviewForm, DeveloperForm,
+    ServiceForm, BlogPostForm, ClientForm, ContactInfoForm
+)
 from .forms import (
     CustomUserCreationForm, ReviewForm, DeveloperForm,
     ServiceForm, BlogPostForm, ClientForm
@@ -261,3 +264,20 @@ def contact(request):
         return redirect('contact')
 
     return render(request, 'contact.html', {'contacts': contacts})
+
+# --- ContactInfo CRUD ---
+
+@login_required
+@superadmin_required
+def contactinfo_create(request):
+    return create_item(request, ContactInfoForm, 'generic_form.html', 'contact', 'Contact Info')
+
+@login_required
+@superadmin_required
+def contactinfo_update(request, pk):
+    return update_item(request, pk, ContactInfo, ContactInfoForm, 'generic_form.html', 'contact')
+
+@login_required
+@superadmin_required
+def contactinfo_delete(request, pk):
+    return delete_item(request, pk, ContactInfo, 'confirm_delete.html', 'contact')

@@ -5,11 +5,14 @@
 
 {% block content %}
 {% if messages %}
-  {% for message in messages %}
-    <div class="bg-green-100 text-green-700 p-4 rounded mb-4">
+  <div class="container mx-auto px-4 sm:px-6 pt-4">
+    {% for message in messages %}
+      <div class="bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-300 p-4 rounded-lg mb-4 flex items-center">
+        <i class="fas fa-check-circle mr-2"></i>
         {{ message }}
-    </div>
-  {% endfor %}
+      </div>
+    {% endfor %}
+  </div>
 {% endif %}
 
 <!-- Modern Hero Section -->
@@ -94,21 +97,32 @@
 </div>
 
 <!-- Contact Information Cards -->
-<section class="py-20 bg-white dark:bg-accent-900">
+<section class="py-20 bg-white dark:bg-[#0f0f12]">
     <div class="container mx-auto px-4 sm:px-6">
         
-        <!-- Section Header -->
+        <!-- Section Header with Admin Controls -->
         <div class="text-center max-w-3xl mx-auto mb-16">
             <span class="text-primary-500 font-semibold tracking-wide uppercase text-sm bg-primary-50 dark:bg-primary-900/30 px-4 py-2 rounded-full">Get in Touch</span>
-            <h2 class="text-3xl md:text-4xl font-bold mt-6 text-accent-800 dark:text-white">How to Reach Us</h2>
-            <p class="text-accent-600 dark:text-accent-400 mt-4">We're always here to help with your next project</p>
+            <h2 class="text-3xl md:text-4xl font-bold mt-6 text-gray-900 dark:text-white">How to Reach Us</h2>
+            <p class="text-gray-600 dark:text-gray-400 mt-4">We're always here to help with your next project</p>
+            
+            <!-- Admin Add Button - Only visible to SUPERADMIN -->
+            {% if user.is_authenticated and user.profile.role == 'SUPERADMIN' %}
+            <div class="mt-6 flex justify-center">
+                <a href="{% url 'contactinfo_create' %}" 
+                   class="inline-flex items-center bg-gradient-to-r from-primary-500 to-primary-600 hover:from-primary-600 hover:to-primary-700 text-white px-6 py-3 rounded-xl font-semibold transition-all shadow-md hover:shadow-lg transform hover:-translate-y-0.5">
+                    <i class="fas fa-plus-circle mr-2"></i>
+                    Add New Contact Information
+                </a>
+            </div>
+            {% endif %}
         </div>
         
         <!-- Three Column Info Cards - Modern Design -->
         <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-20">
             
             <!-- Our Address Card -->
-            <div class="group relative bg-white dark:bg-accent-800 rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-300 hover:-translate-y-2 overflow-hidden">
+            <div class="group relative bg-white dark:bg-[#1a1a1f] rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-300 hover:-translate-y-2 overflow-hidden border border-gray-100 dark:border-gray-800">
                 <!-- Gradient Overlay -->
                 <div class="absolute inset-0 bg-gradient-to-br from-primary-500/0 to-primary-500/0 group-hover:from-primary-500/5 group-hover:to-primary-600/5 transition-all duration-500"></div>
                 
@@ -121,11 +135,25 @@
                 
                 <!-- Content -->
                 <div class="p-8 text-center">
-                    <h3 class="text-2xl font-bold text-accent-800 dark:text-white mb-4">Our Address</h3>
-                    {% for c in contacts|slice:":1" %}
-                    <p class="text-accent-600 dark:text-accent-300 leading-relaxed">{{ c.address|default:"13/9 Myamaningh ur, Dhaka 1000, Bangladesh" }}</p>
+                    <h3 class="text-2xl font-bold text-gray-900 dark:text-white mb-4">Our Address</h3>
+                    {% for c in contacts %}
+                    <p class="text-gray-600 dark:text-gray-400 leading-relaxed">{{ c.address }}</p>
+                    
+                    <!-- Admin Controls for each card -->
+                    {% if user.is_authenticated and user.profile.role == 'SUPERADMIN' %}
+                    <div class="flex items-center justify-center gap-3 mt-6 pt-4 border-t border-gray-200 dark:border-gray-800">
+                        <a href="{% url 'contactinfo_update' c.id %}" 
+                           class="inline-flex items-center bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg text-sm font-medium transition-all shadow hover:shadow-md">
+                            <i class="fas fa-edit mr-1"></i> Edit
+                        </a>
+                        <a href="{% url 'contactinfo_delete' c.id %}" 
+                           class="inline-flex items-center bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-lg text-sm font-medium transition-all shadow hover:shadow-md">
+                            <i class="fas fa-trash-alt mr-1"></i> Delete
+                        </a>
+                    </div>
+                    {% endif %}
                     {% empty %}
-                    <p class="text-accent-600 dark:text-accent-300">13/9 Myamaningh ur, Dhaka 1000, Bangladesh</p>
+                    <p class="text-gray-600 dark:text-gray-400">13/9 Myamaningh ur, Dhaka 1000, Bangladesh</p>
                     {% endfor %}
                     
                     <!-- Decorative Line -->
@@ -134,7 +162,7 @@
             </div>
             
             <!-- Contact Card -->
-            <div class="group relative bg-white dark:bg-accent-800 rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-300 hover:-translate-y-2 overflow-hidden">
+            <div class="group relative bg-white dark:bg-[#1a1a1f] rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-300 hover:-translate-y-2 overflow-hidden border border-gray-100 dark:border-gray-800">
                 <div class="absolute inset-0 bg-gradient-to-br from-primary-500/0 to-primary-500/0 group-hover:from-primary-500/5 group-hover:to-primary-600/5 transition-all duration-500"></div>
                 
                 <div class="bg-gradient-to-r from-primary-500 to-primary-600 p-6">
@@ -144,19 +172,33 @@
                 </div>
                 
                 <div class="p-8 text-center">
-                    <h3 class="text-2xl font-bold text-accent-800 dark:text-white mb-4">Contact</h3>
-                    {% for c in contacts|slice:":1" %}
-                    <p class="text-accent-600 dark:text-accent-300 mb-2">
-                        <span class="font-medium text-accent-800 dark:text-white">Mobile:</span> 
-                        <a href="tel:{{ c.phone }}" class="hover:text-primary-500 transition-colors">{{ c.phone|default:"+8802550505057" }}</a>
+                    <h3 class="text-2xl font-bold text-gray-900 dark:text-white mb-4">Contact</h3>
+                    {% for c in contacts %}
+                    <p class="text-gray-600 dark:text-gray-400 mb-2">
+                        <span class="font-medium text-gray-900 dark:text-white">Mobile:</span> 
+                        <a href="tel:{{ c.phone }}" class="hover:text-primary-500 dark:hover:text-primary-400 transition-colors">{{ c.phone }}</a>
                     </p>
-                    <p class="text-accent-600 dark:text-accent-300">
-                        <span class="font-medium text-accent-800 dark:text-white">E-mail:</span> 
-                        <a href="mailto:{{ c.email }}" class="hover:text-primary-500 transition-colors">{{ c.email|default:"admin@jeasital.com" }}</a>
+                    <p class="text-gray-600 dark:text-gray-400">
+                        <span class="font-medium text-gray-900 dark:text-white">E-mail:</span> 
+                        <a href="mailto:{{ c.email }}" class="hover:text-primary-500 dark:hover:text-primary-400 transition-colors">{{ c.email }}</a>
                     </p>
+                    
+                    <!-- Admin Controls for each card -->
+                    {% if user.is_authenticated and user.profile.role == 'SUPERADMIN' %}
+                    <div class="flex items-center justify-center gap-3 mt-6 pt-4 border-t border-gray-200 dark:border-gray-800">
+                        <a href="{% url 'contactinfo_update' c.id %}" 
+                           class="inline-flex items-center bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg text-sm font-medium transition-all shadow hover:shadow-md">
+                            <i class="fas fa-edit mr-1"></i> Edit
+                        </a>
+                        <a href="{% url 'contactinfo_delete' c.id %}" 
+                           class="inline-flex items-center bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-lg text-sm font-medium transition-all shadow hover:shadow-md">
+                            <i class="fas fa-trash-alt mr-1"></i> Delete
+                        </a>
+                    </div>
+                    {% endif %}
                     {% empty %}
-                    <p class="text-accent-600 dark:text-accent-300 mb-2">Mobile: +8802550505057</p>
-                    <p class="text-accent-600 dark:text-accent-300">E-mail: admin@jeasital.com</p>
+                    <p class="text-gray-600 dark:text-gray-400 mb-2">Mobile: +8802550505057</p>
+                    <p class="text-gray-600 dark:text-gray-400">E-mail: admin@ondrobit.com</p>
                     {% endfor %}
                     
                     <div class="w-20 h-1 bg-primary-500 mx-auto mt-6 rounded-full"></div>
@@ -164,7 +206,7 @@
             </div>
             
             <!-- Hours of Operation Card -->
-            <div class="group relative bg-white dark:bg-accent-800 rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-300 hover:-translate-y-2 overflow-hidden">
+            <div class="group relative bg-white dark:bg-[#1a1a1f] rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-300 hover:-translate-y-2 overflow-hidden border border-gray-100 dark:border-gray-800">
                 <div class="absolute inset-0 bg-gradient-to-br from-primary-500/0 to-primary-500/0 group-hover:from-primary-500/5 group-hover:to-primary-600/5 transition-all duration-500"></div>
                 
                 <div class="bg-gradient-to-r from-primary-500 to-primary-600 p-6">
@@ -174,10 +216,20 @@
                 </div>
                 
                 <div class="p-8 text-center">
-                    <h3 class="text-2xl font-bold text-accent-800 dark:text-white mb-4">Hours of Operation</h3>
-                    <p class="text-accent-600 dark:text-accent-300 font-medium mb-2">Sunday - Thursday</p>
+                    <h3 class="text-2xl font-bold text-gray-900 dark:text-white mb-4">Hours of Operation</h3>
+                    <p class="text-gray-600 dark:text-gray-400 font-medium mb-2">Sunday - Thursday</p>
                     <p class="text-2xl font-bold text-primary-500">09:00am - 5:00pm</p>
-                    <p class="text-sm text-accent-500 dark:text-accent-400 mt-4">Closed on Friday & Saturday</p>
+                    <p class="text-sm text-gray-500 dark:text-gray-500 mt-4">Closed on Friday & Saturday</p>
+                    
+                    <!-- Admin Controls for Hours (if you have a model for hours) -->
+                    {% if user.is_authenticated and user.profile.role == 'SUPERADMIN' %}
+                    <div class="flex items-center justify-center gap-3 mt-6 pt-4 border-t border-gray-200 dark:border-gray-800">
+                        <a href="#" 
+                           class="inline-flex items-center bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg text-sm font-medium transition-all shadow hover:shadow-md">
+                            <i class="fas fa-edit mr-1"></i> Edit Hours
+                        </a>
+                    </div>
+                    {% endif %}
                     
                     <div class="w-20 h-1 bg-primary-500 mx-auto mt-6 rounded-full"></div>
                 </div>
@@ -193,11 +245,11 @@
             <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-start">
                 
                 <!-- Left Side - Form Section -->
-                <div class="bg-white dark:bg-accent-800 rounded-3xl shadow-xl p-8 lg:p-10 border border-accent-100 dark:border-accent-700">
-                    <h2 class="text-3xl font-bold text-accent-800 dark:text-white mb-3">
+                <div class="bg-white dark:bg-[#1a1a1f] rounded-3xl shadow-xl p-8 lg:p-10 border border-gray-100 dark:border-gray-800">
+                    <h2 class="text-3xl font-bold text-gray-900 dark:text-white mb-3">
                         Ready to Get Started?
                     </h2>
-                    <p class="text-accent-600 dark:text-accent-400 mb-8">
+                    <p class="text-gray-600 dark:text-gray-400 mb-8">
                         Your email address will not be published. Required fields are marked *
                     </p>
                     
@@ -206,22 +258,22 @@
                         
                         <div>
                             <input type="text" name="name" placeholder="Your name *" required
-                                   class="w-full px-5 py-4 rounded-xl border border-accent-200 dark:border-accent-700 bg-white dark:bg-accent-900 text-accent-800 dark:text-accent-200 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition">
+                                   class="w-full px-5 py-4 rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-[#0f0f12] text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition">
                         </div>
                         
                         <div>
                             <input type="email" name="email" placeholder="Your email address *" required
-                                   class="w-full px-5 py-4 rounded-xl border border-accent-200 dark:border-accent-700 bg-white dark:bg-accent-900 text-accent-800 dark:text-accent-200 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition">
+                                   class="w-full px-5 py-4 rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-[#0f0f12] text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition">
                         </div>
                         
                         <div>
                             <input type="tel" name="phone" placeholder="Your phone number"
-                                   class="w-full px-5 py-4 rounded-xl border border-accent-200 dark:border-accent-700 bg-white dark:bg-accent-900 text-accent-800 dark:text-accent-200 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition">
+                                   class="w-full px-5 py-4 rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-[#0f0f12] text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition">
                         </div>
                         
                         <div>
                             <textarea name="message" rows="5" placeholder="Write your message... *" required
-                                      class="w-full px-5 py-4 rounded-xl border border-accent-200 dark:border-accent-700 bg-white dark:bg-accent-900 text-accent-800 dark:text-accent-200 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition resize-none"></textarea>
+                                      class="w-full px-5 py-4 rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-[#0f0f12] text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition resize-none"></textarea>
                         </div>
                         
                         <button type="submit"
@@ -235,7 +287,7 @@
                 <!-- Right Side - Map and Company Info -->
                 <div class="space-y-6">
                     <!-- Map Card -->
-                    <div class="bg-white dark:bg-accent-800 rounded-3xl shadow-xl overflow-hidden border border-accent-100 dark:border-accent-700">
+                    <div class="bg-white dark:bg-[#1a1a1f] rounded-3xl shadow-xl overflow-hidden border border-gray-100 dark:border-gray-800">
                         <div class="h-64 w-full">
                             <iframe 
                                 src="https://www.google.com/maps/embed?pb=!1m17!1m12!1m3!1d1090.318257324218!2d90.36108326977542!3d23.80925439999999!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m2!1m1!2zMjPCsDQ4JzMyLjMiTiA5MMKwMjEnNDEuNCJF!5e0!3m2!1sen!2sbd!4v1710345678901!5m2!1sen!2sbd" 
@@ -249,29 +301,14 @@
                         </div>
                         
                         <!-- Coordinates Badge -->
-                        <div class="bg-gradient-to-r from-primary-50 to-accent-50 dark:from-accent-700 dark:to-accent-800 px-6 py-4 flex items-center justify-center gap-3 border-t border-accent-200 dark:border-accent-600">
+                        <div class="bg-gradient-to-r from-primary-50 to-gray-50 dark:from-gray-800 dark:to-gray-900 px-6 py-4 flex items-center justify-center gap-3 border-t border-gray-200 dark:border-gray-700">
                             <i class="fas fa-map-pin text-primary-500"></i>
-                            <span class="text-accent-700 dark:text-accent-300 font-mono font-medium">23°48'32.3"N 90°21'41.4"E</span>
-                        </diParbochaiv>
-                    </div>
-                  
-                        
+                            <span class="text-gray-700 dark:text-gray-300 font-mono font-medium">23°48'32.3"N 90°21'41.4"E</span>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
 </section>
-
-<!-- AOS Animation -->
-<link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
-<script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
-<script>
-    AOS.init({ 
-        duration: 800, 
-        once: true, 
-        offset: 50,
-        easing: 'ease-out-cubic'
-    });
-</script>
 {% endblock %}

@@ -52,7 +52,7 @@ class Developer(models.Model):
     experience = models.PositiveIntegerField()
     image = models.ImageField(upload_to='developers/')
     bio = models.TextField()
-    cv_url = models.URLField(blank=True)
+    linked_in_url = models.URLField(blank=True, null=True)
 
     def __str__(self):
         return self.name
