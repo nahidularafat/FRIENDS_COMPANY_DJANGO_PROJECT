@@ -298,16 +298,19 @@
     <header class="glass-effect fixed w-full z-50 shadow-sm">
         <nav class="container mx-auto px-4 sm:px-6 py-3 sm:py-4">
             <div class="flex justify-between items-center">
-               <!-- Logo -->
+        
+<!-- Logo -->
 <a href="{% url 'home' %}" class="flex items-center space-x-2 sm:space-x-3 group">
     <div class="bg-white dark:bg-transparent rounded-xl transition-all duration-300 p-2">
-        <img class="w-auto h-8 sm:h-10 md:h-12 dark:brightness-0 dark:invert" src="{% static 'images/logo.png' %}" alt="Ondrobit Logo">
+        <!-- Light mode logo -->
+        <img class="w-auto h-8 sm:h-10 md:h-12 dark:hidden" src="{% static 'images/logo.png' %}" alt="Ondrobit Logo">
+        <!-- Dark mode logo -->
+        <img class="w-auto h-8 sm:h-10 md:h-12 hidden dark:block" src="{% static 'images/logowhite.png' %}" alt="Ondrobit Logo">
     </div>
     <div>
-        <span class="text-base sm:text-xl font-bold text-accent-800 dark:text-white block tracking-tight">Your</span>
-        <span class="text-primary-600 dark:text-primary-400 font-medium text-xs sm:text-sm -mt-1 block">Expert Digital Solutions</span>
+        <span class="text-base sm:text-xl font-bold text-gray-900 dark:text-white block tracking-tight">Ondrobit</span>
+        <span class="text-primary-600 dark:text-primary-400 font-medium text-xs sm:text-sm -mt-1 block">Your Expert Digital Solutions</span>
     </div>
-
 </a>
 
                 <!-- Desktop Navbar Links -->
