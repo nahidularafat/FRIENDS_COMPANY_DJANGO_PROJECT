@@ -1,484 +1,237 @@
+{% extends 'base.html' %}
 {% load static %}
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{{ post.title }} - Ondrobit</title>
-    
-    <!-- Tailwind CSS -->
-    <script src="https://cdn.tailwindcss.com/3.4.3"></script>
-    <script>
-        tailwind.config = {
-            darkMode: 'class',
-            theme: {
-                extend: {
-                    colors: {
-                        primary: {
-                            50: '#f0f9ff',
-                            100: '#e0f2fe',
-                            500: '#0ea5e9',
-                            600: '#0284c7',
-                            700: '#0369a1',
-                            800: '#075985',
-                            900: '#0c4a6e',
-                        },
-                        accent: {
-                            50: '#f8fafc',
-                            100: '#f1f5f9',
-                            200: '#e2e8f0',
-                            300: '#cbd5e1',
-                            400: '#94a3b8',
-                            500: '#64748b',
-                            600: '#475569',
-                            700: '#334155',
-                            800: '#1e293b',
-                            900: '#0f172a',
-                        }
-                    },
-                    fontFamily: {
-                        'sans': ['Inter', 'system-ui', 'sans-serif'],
-                        'serif': ['Georgia', 'serif'],
-                    },
-                    typography: {
-                        DEFAULT: {
-                            css: {
-                                maxWidth: 'none',
-                                color: 'inherit',
-                                a: {
-                                    color: '#0ea5e9',
-                                    '&:hover': {
-                                        color: '#0284c7',
-                                    },
-                                },
-                                'h1, h2, h3, h4': {
-                                    color: 'inherit',
-                                },
-                            },
-                        },
-                    },
-                }
-            }
-        }
-    </script>
 
-    <!-- Google Fonts -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+{% block title %}{{ post.title }} - Ondrobit{% endblock %}
 
-    <!-- Favicon -->
-    <link rel="icon" type="image/png" href="{% static 'images/icon.png' %}">
+{% block blog_active %}text-primary-500 font-semibold border-b-2 border-primary-500{% endblock %}
 
-    <!-- Font Awesome -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+{% block extra_css %}
+<style>
+    .blog-content {
+        font-family: 'Georgia', serif;
+        line-height: 1.8;
+    }
+    .blog-content h1, .blog-content h2, .blog-content h3 {
+        font-family: 'Inter', sans-serif;
+    }
+    .gradient-text {
+        background: linear-gradient(135deg, #ff4d4d 0%, #e63e3e 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+    }
+    .reading-progress {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 0%;
+        height: 3px;
+        background: linear-gradient(90deg, #ff4d4d, #e63e3e);
+        z-index: 100;
+        transition: width 0.3s ease;
+    }
+    .toc-item {
+        transition: all 0.3s ease;
+    }
+    .toc-item:hover {
+        transform: translateX(8px);
+        color: #ff4d4d;
+    }
+</style>
+{% endblock %}
 
-    <!-- Custom CSS -->
-    <style>
-        .glass-effect {
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(10px);
-            border-bottom: 1px solid rgba(0, 0, 0, 0.1);
-        }
-        .dark .glass-effect {
-            background: rgba(15, 23, 42, 0.95);
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-        }
-        .nav-link {
-            position: relative;
-        }
-        .nav-link::after {
-            content: '';
-            position: absolute;
-            width: 0;
-            height: 2px;
-            bottom: -4px;
-            left: 0;
-            background-color: #0ea5e9;
-            transition: width 0.3s ease;
-        }
-        .nav-link:hover::after {
-            width: 100%;
-        }
-        .blog-content {
-            font-family: 'Georgia', serif;
-            line-height: 1.8;
-        }
-        .blog-content h1, .blog-content h2, .blog-content h3 {
-            font-family: 'Inter', sans-serif;
-        }
-        .gradient-text {
-            background: linear-gradient(135deg, #0ea5e9 0%, #0369a1 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-        }
-        .reading-progress {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 0%;
-            height: 3px;
-            background: linear-gradient(90deg, #0ea5e9, #0369a1);
-            z-index: 100;
-            transition: width 0.3s ease;
-        }
-        .toc-item {
-            transition: all 0.3s ease;
-        }
-        .toc-item:hover {
-            transform: translateX(8px);
-            color: #0ea5e9;
-        }
-    </style>
-</head>
+{% block content %}
+<!-- Reading Progress Bar -->
+<div class="reading-progress" id="reading-progress"></div>
 
-<body class="bg-white dark:bg-accent-900 text-accent-800 dark:text-accent-100 font-sans transition-colors duration-300">
-    
-    <!-- Reading Progress Bar -->
-    <div class="reading-progress" id="reading-progress"></div>
-
-    <!-- ===== HEADER ===== -->
-    <header class="glass-effect fixed w-full z-50 shadow-sm">
-        <nav class="container mx-auto px-6 py-4 flex justify-between items-center">
+<div class="bg-white dark:bg-[#0f0f12] py-12">
+    <div class="container mx-auto px-4 sm:px-6">
+        <div class="max-w-4xl mx-auto">
             
-            <!-- Logo -->
-            <a href="{% url 'home' %}" class="flex items-center space-x-3 group">
-                <div class="p-2 bg-primary-500 rounded-lg group-hover:bg-primary-600 transition-colors shadow-md">
-                    <img class="w-8 h-8" src="{% static 'images/logo.png' %}" alt="Ondrobit Logo">
+            <!-- Article Header -->
+            <article class="mb-12">
+                <!-- Breadcrumb -->
+                <nav class="flex mb-6" aria-label="Breadcrumb">
+                    <ol class="flex items-center space-x-2 text-sm text-gray-500 dark:text-gray-400">
+                        <li>
+                            <a href="{% url 'home' %}" class="hover:text-primary-500 dark:hover:text-primary-400 transition-colors">Home</a>
+                        </li>
+                        <li class="flex items-center">
+                            <i class="fas fa-chevron-right mx-2 text-xs"></i>
+                            <a href="{% url 'blog' %}" class="hover:text-primary-500 dark:hover:text-primary-400 transition-colors">Blog</a>
+                        </li>
+                        <li class="flex items-center">
+                            <i class="fas fa-chevron-right mx-2 text-xs"></i>
+                            <span class="text-gray-700 dark:text-gray-300">{{ post.title|truncatewords:5 }}</span>
+                        </li>
+                    </ol>
+                </nav>
+
+                <!-- Article Title -->
+                <h1 class="text-4xl md:text-5xl font-bold text-gray-900 dark:text-white mb-6 leading-tight">
+                    {{ post.title }}
+                </h1>
+
+                <!-- Article Meta -->
+                <div class="flex flex-wrap items-center gap-4 text-gray-600 dark:text-gray-400 mb-8">
+                    <div class="flex items-center">
+                        <div class="w-10 h-10 bg-gradient-to-r from-primary-500 to-primary-600 rounded-full flex items-center justify-center text-white font-semibold mr-3 shadow-md">
+                            {{ post.author.username.0|upper }}
+                        </div>
+                        <div>
+                            <span class="font-medium text-gray-700 dark:text-gray-300 block">{{ post.author.username }}</span>
+                            <span class="text-sm">Author</span>
+                        </div>
+                    </div>
+                    <div class="flex items-center">
+                        <i class="fas fa-calendar mr-2 text-primary-500"></i>
+                        <span>{{ post.created_at|date:"F j, Y" }}</span>
+                    </div>
+                    <div class="flex items-center">
+                        <i class="fas fa-clock mr-2 text-primary-500"></i>
+                        <span>{{ post.content|wordcount }} words</span>
+                    </div>
                 </div>
-                <div>
-                    <span class="text-xl font-bold text-accent-800 dark:text-white block">Ondrobit</span>
-                    <span class="text-primary-500 font-semibold text-sm -mt-1 block">Ondrobit</span>
+
+                <!-- Featured Image -->
+                {% if post.image %}
+                <div class="relative mb-8 rounded-2xl overflow-hidden shadow-2xl">
+                    <img src="{{ post.image.url }}" alt="{{ post.title }}" 
+                         class="w-full h-auto max-h-96 object-cover">
+                    <div class="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent"></div>
                 </div>
-            </a>
-
-            <!-- Navbar Links -->
-            <div class="hidden md:flex items-center space-x-8 font-medium">
-                <a href="{% url 'home' %}" class="nav-link text-accent-700 dark:text-accent-200 hover:text-primary-500 font-semibold">Home</a>
-                <a href="{% url 'services' %}" class="nav-link text-accent-700 dark:text-accent-200 hover:text-primary-500 font-semibold">Services</a>
-                <a href="{% url 'blog' %}" class="nav-link text-primary-500 font-semibold border-b-2 border-primary-500">Blog</a>
-                <a href="{% url 'about_us' %}" class="nav-link text-accent-700 dark:text-accent-200 hover:text-primary-500 font-semibold">About Us</a>
-                <a href="{% url 'review_page' %}" class="nav-link text-accent-700 dark:text-accent-200 hover:text-primary-500 font-semibold">Reviews</a>
-            </div>
-
-            <!-- Buttons -->
-            <div class="flex items-center space-x-4">
-
-                <!-- Theme Toggle -->
-                <button id="theme-toggle" type="button"
-                    class="text-accent-500 dark:text-accent-400 hover:bg-accent-100 dark:hover:bg-accent-800
-                    focus:outline-none focus:ring-2 focus:ring-primary-500 rounded-lg p-2.5 transition-colors">
-                    <svg id="theme-toggle-dark-icon" class="hidden w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
-                        <path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z"></path>
-                    </svg>
-                    <svg id="theme-toggle-light-icon" class="hidden w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
-                        <path fill-rule="evenodd" clip-rule="evenodd"
-                            d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 
-                            0 011-1zm4 8a4 4 0 11-8 0 4 4 
-                            0 018 0zM4 11a1 1 0 100-2H3a1 1 
-                            0 000 2h1z">
-                        </path>
-                    </svg>
-                </button>
-
-                {% if user.is_authenticated %}
-                    {% if user.profile.role == 'SUPERADMIN' %}
-                        <a href="{% url 'dashboard' %}"
-                           class="bg-primary-500 hover:bg-primary-600 text-white px-4 py-2.5 rounded-lg font-semibold transition-all shadow-md hover:shadow-lg flex items-center">
-                            <i class="fas fa-tachometer-alt mr-2"></i>Dashboard
-                        </a>
-                    {% endif %}
-                    <a href="{% url 'logout' %}"
-                       class="bg-accent-200 hover:bg-accent-300 text-accent-800 dark:bg-accent-700 dark:hover:bg-accent-600 dark:text-accent-100 px-4 py-2.5 rounded-lg font-semibold transition-all flex items-center">
-                        <i class="fas fa-sign-out-alt mr-2"></i>Logout
-                    </a>
-                {% else %}
-                    <a href="{% url 'login' %}"
-                       class="bg-primary-500 hover:bg-primary-600 text-white px-6 py-2.5 rounded-lg font-semibold transition-all shadow-md hover:shadow-lg flex items-center">
-                        <i class="fas fa-sign-in-alt mr-2"></i>Login
-                    </a>
                 {% endif %}
-            </div>
-        </nav>
-    </header>
+            </article>
 
-    <!-- ===== MAIN CONTENT ===== -->
-    <main class="pt-20">
-        <div class="bg-white dark:bg-accent-900 py-12">
-            <div class="container mx-auto px-4">
-                <div class="max-w-4xl mx-auto">
-                    
-                    <!-- Article Header -->
-                    <article class="mb-12">
-                        <!-- Breadcrumb -->
-                        <nav class="flex mb-6" aria-label="Breadcrumb">
-                            <ol class="flex items-center space-x-2 text-sm text-accent-500 dark:text-accent-400">
-                                <li>
-                                    <a href="{% url 'home' %}" class="hover:text-primary-500 transition-colors">Home</a>
-                                </li>
-                                <li class="flex items-center">
-                                    <i class="fas fa-chevron-right mx-2 text-xs"></i>
-                                    <a href="{% url 'blog' %}" class="hover:text-primary-500 transition-colors">Blog</a>
-                                </li>
-                                <li class="flex items-center">
-                                    <i class="fas fa-chevron-right mx-2 text-xs"></i>
-                                    <span class="text-accent-700 dark:text-accent-300">{{ post.title|truncatewords:5 }}</span>
-                                </li>
-                            </ol>
-                        </nav>
+            <!-- Article Content and Sidebar -->
+            <div class="flex flex-col lg:flex-row gap-12">
+                <!-- Main Content -->
+                <div class="flex-1">
+                    <div class="blog-content prose prose-lg dark:prose-invert max-w-none 
+                                prose-headings:font-bold prose-headings:text-gray-900 dark:prose-headings:text-white
+                                prose-p:text-gray-700 dark:prose-p:text-gray-300
+                                prose-blockquote:border-primary-500 prose-blockquote:bg-primary-50 dark:prose-blockquote:bg-[#1a1a1f]
+                                prose-code:bg-gray-100 dark:prose-code:bg-[#1a1a1f] prose-code:text-gray-800 dark:prose-code:text-gray-200
+                                prose-pre:bg-gray-900 dark:prose-pre:bg-black prose-pre:text-gray-100
+                                prose-a:text-primary-500 hover:prose-a:text-primary-600
+                                prose-strong:text-gray-900 dark:prose-strong:text-white">
+                        {{ post.content|linebreaks }}
+                    </div>
 
-                        <!-- Article Title -->
-                        <h1 class="text-4xl md:text-5xl font-bold text-accent-800 dark:text-white mb-6 leading-tight">
-                            {{ post.title }}
-                        </h1>
-
-                        <!-- Article Meta -->
-                        <div class="flex flex-wrap items-center gap-4 text-accent-600 dark:text-accent-400 mb-8">
-                            <div class="flex items-center">
-                                <div class="w-10 h-10 bg-primary-500 rounded-full flex items-center justify-center text-white font-semibold mr-3 shadow-md">
-                                    {{ post.author.username.0|upper }}
-                                </div>
-                                <div>
-                                    <span class="font-medium text-accent-700 dark:text-accent-300 block">{{ post.author.username }}</span>
-                                    <span class="text-sm">Author</span>
-                                </div>
+                    <!-- Article Footer -->
+                    <div class="mt-12 pt-8 border-t border-gray-200 dark:border-gray-800">
+                        <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+                            <div>
+                                <a href="{% url 'blog' %}" 
+                                   class="inline-flex items-center text-primary-500 hover:text-primary-600 dark:text-primary-400 dark:hover:text-primary-300 font-semibold transition-colors group">
+                                    <i class="fas fa-arrow-left mr-2 group-hover:-translate-x-1 transition-transform"></i>
+                                    Back to Blog
+                                </a>
                             </div>
-                            <div class="flex items-center">
-                                <i class="fas fa-calendar mr-2 text-primary-500"></i>
-                                <span>{{ post.created_at|date:"F j, Y" }}</span>
+                            
+                            {% if user.is_authenticated and user.profile.role == 'SUPERADMIN' %}
+                            <div class="flex space-x-3">
+                                <a href="{% url 'blog_update' post.pk %}" 
+                                   class="bg-gradient-to-r from-primary-500 to-primary-600 hover:from-primary-600 hover:to-primary-700 text-white px-6 py-2.5 rounded-xl font-semibold transition-all shadow-md hover:shadow-lg flex items-center">
+                                    <i class="fas fa-edit mr-2"></i>
+                                    Edit Post
+                                </a>
                             </div>
-                            <div class="flex items-center">
-                                <i class="fas fa-clock mr-2 text-primary-500"></i>
-                                <span>{% widthratio post.content|wordcount 200 1 %} min read</span>
-                            </div>
+                            {% endif %}
                         </div>
 
-                        <!-- Featured Image -->
-                        <div class="relative mb-8 rounded-2xl overflow-hidden shadow-2xl">
-                            <img src="{{ post.image.url }}" alt="{{ post.title }}" 
-                                 class="w-full h-auto max-h-96 object-cover">
-                            <div class="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent"></div>
-                        </div>
-                    </article>
-
-                    <!-- Article Content and Sidebar -->
-                    <div class="flex flex-col lg:flex-row gap-12">
-                        <!-- Main Content -->
-                        <div class="flex-1">
-                            <div class="blog-content prose prose-lg dark:prose-invert max-w-none 
-                                        prose-headings:font-bold prose-headings:text-accent-800 dark:prose-headings:text-white
-                                        prose-p:text-accent-700 dark:prose-p:text-accent-300
-                                        prose-blockquote:border-primary-500 prose-blockquote:bg-primary-50 dark:prose-blockquote:bg-accent-800
-                                        prose-code:bg-accent-100 dark:prose-code:bg-accent-800 prose-code:text-accent-800 dark:prose-code:text-accent-200
-                                        prose-pre:bg-accent-900 prose-pre:text-accent-100
-                                        prose-a:text-primary-500 hover:prose-a:text-primary-600
-                                        prose-strong:text-accent-800 dark:prose-strong:text-white">
-                                {{ post.content|linebreaks }}
-                            </div>
-
-                            <!-- Article Footer -->
-                            <div class="mt-12 pt-8 border-t border-accent-200 dark:border-accent-700">
-                                <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-                                    <div>
-                                        <a href="{% url 'blog' %}" 
-                                           class="inline-flex items-center text-primary-500 hover:text-primary-600 font-semibold transition-colors group">
-                                            <i class="fas fa-arrow-left mr-2 group-hover:-translate-x-1 transition-transform"></i>
-                                            Back to Blog
-                                        </a>
-                                    </div>
-                                    
-                                    {% if user.is_authenticated and user.profile.role == 'SUPERADMIN' %}
-                                    <div class="flex space-x-3">
-                                        <a href="{% url 'blog_update' post.pk %}" 
-                                           class="bg-primary-500 hover:bg-primary-600 text-white px-6 py-2.5 rounded-xl font-semibold transition-all shadow-md hover:shadow-lg flex items-center">
-                                            <i class="fas fa-edit mr-2"></i>
-                                            Edit Post
-                                        </a>
-                                    </div>
-                                    {% endif %}
-                                </div>
-
-                                <!-- Share Buttons -->
-                                <div class="mt-8 pt-6 border-t border-accent-200 dark:border-accent-700">
-                                    <h4 class="text-lg font-semibold text-accent-800 dark:text-white mb-4">Share this article</h4>
-                                    <div class="flex space-x-4">
-                                        <button class="flex items-center space-x-2 bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg transition-colors">
-                                            <i class="fab fa-facebook-f"></i>
-                                            <span>Share</span>
-                                        </button>
-                                        <button class="flex items-center space-x-2 bg-blue-400 hover:bg-blue-500 text-white px-4 py-2 rounded-lg transition-colors">
-                                            <i class="fab fa-twitter"></i>
-                                            <span>Tweet</span>
-                                        </button>
-                                        <button class="flex items-center space-x-2 bg-blue-700 hover:bg-blue-800 text-white px-4 py-2 rounded-lg transition-colors">
-                                            <i class="fab fa-linkedin-in"></i>
-                                            <span>Share</span>
-                                        </button>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Sidebar -->
-                        <div class="lg:w-80 space-y-8">
-                            <!-- Author Bio -->
-                            <div class="bg-accent-50 dark:bg-accent-800 rounded-2xl p-6 shadow-lg">
-                                <h3 class="text-lg font-semibold text-accent-800 dark:text-white mb-4">About the Author</h3>
-                                <div class="flex items-center mb-4">
-                                    <div class="w-12 h-12 bg-primary-500 rounded-full flex items-center justify-center text-white font-semibold mr-3">
-                                        {{ post.author.username.0|upper }}
-                                    </div>
-                                    <div>
-                                        <span class="font-medium text-accent-800 dark:text-white block">{{ post.author.username }}</span>
-                                        <span class="text-sm text-accent-500 dark:text-accent-400">Content Creator</span>
-                                    </div>
-                                </div>
-                                <p class="text-accent-600 dark:text-accent-300 text-sm">
-                                    Passionate about technology and software development. Sharing insights and experiences to help others in the tech community.
-                                </p>
-                            </div>
-
-                            <!-- Table of Contents -->
-                            <div class="bg-accent-50 dark:bg-accent-800 rounded-2xl p-6 shadow-lg">
-                                <h3 class="text-lg font-semibold text-accent-800 dark:text-white mb-4">Table of Contents</h3>
-                                <nav class="space-y-2">
-                                    <a href="#" class="toc-item block text-accent-600 dark:text-accent-400 hover:text-primary-500 text-sm">
-                                        Introduction
-                                    </a>
-                                    <a href="#" class="toc-item block text-accent-600 dark:text-accent-400 hover:text-primary-500 text-sm">
-                                        Key Features
-                                    </a>
-                                    <a href="#" class="toc-item block text-accent-600 dark:text-accent-400 hover:text-primary-500 text-sm">
-                                        Implementation
-                                    </a>
-                                    <a href="#" class="toc-item block text-accent-600 dark:text-accent-400 hover:text-primary-500 text-sm">
-                                        Best Practices
-                                    </a>
-                                    <a href="#" class="toc-item block text-accent-600 dark:text-accent-400 hover:text-primary-500 text-sm">
-                                        Conclusion
-                                    </a>
-                                </nav>
-                            </div>
-
-                            <!-- Related Posts -->
-                            <div class="bg-accent-50 dark:bg-accent-800 rounded-2xl p-6 shadow-lg">
-                                <h3 class="text-lg font-semibold text-accent-800 dark:text-white mb-4">Related Articles</h3>
-                                <div class="space-y-4">
-                                    <a href="#" class="block group">
-                                        <h4 class="text-sm font-medium text-accent-800 dark:text-white group-hover:text-primary-500 transition-colors">
-                                            The Future of Web Development
-                                        </h4>
-                                        <p class="text-xs text-accent-500 dark:text-accent-400 mt-1">5 min read</p>
-                                    </a>
-                                    <a href="#" class="block group">
-                                        <h4 class="text-sm font-medium text-accent-800 dark:text-white group-hover:text-primary-500 transition-colors">
-                                            AI in Modern Applications
-                                        </h4>
-                                        <p class="text-xs text-accent-500 dark:text-accent-400 mt-1">7 min read</p>
-                                    </a>
-                                    <a href="#" class="block group">
-                                        <h4 class="text-sm font-medium text-accent-800 dark:text-white group-hover:text-primary-500 transition-colors">
-                                            Cloud Computing Best Practices
-                                        </h4>
-                                        <p class="text-xs text-accent-500 dark:text-accent-400 mt-1">6 min read</p>
-                                    </a>
-                                </div>
+                        <!-- Share Buttons -->
+                        <div class="mt-8 pt-6 border-t border-gray-200 dark:border-gray-800">
+                            <h4 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">Share this article</h4>
+                            <div class="flex flex-wrap gap-3">
+                                <button class="flex items-center space-x-2 bg-[#1877f2] hover:bg-[#0e5fcc] text-white px-4 py-2 rounded-lg transition-colors">
+                                    <i class="fab fa-facebook-f"></i>
+                                    <span>Share</span>
+                                </button>
+                                <button class="flex items-center space-x-2 bg-[#1da1f2] hover:bg-[#1781c4] text-white px-4 py-2 rounded-lg transition-colors">
+                                    <i class="fab fa-twitter"></i>
+                                    <span>Tweet</span>
+                                </button>
+                                <button class="flex items-center space-x-2 bg-[#0a66c2] hover:bg-[#084e94] text-white px-4 py-2 rounded-lg transition-colors">
+                                    <i class="fab fa-linkedin-in"></i>
+                                    <span>Share</span>
+                                </button>
                             </div>
                         </div>
                     </div>
                 </div>
+
+                <!-- Sidebar -->
+                <div class="lg:w-80 space-y-8">
+                    <!-- Author Bio -->
+                    <div class="bg-gray-50 dark:bg-[#1a1a1f] rounded-2xl p-6 shadow-lg border border-gray-200 dark:border-gray-800">
+                        <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">About the Author</h3>
+                        <div class="flex items-center mb-4">
+                            <div class="w-12 h-12 bg-gradient-to-r from-primary-500 to-primary-600 rounded-full flex items-center justify-center text-white font-semibold mr-3">
+                                {{ post.author.username.0|upper }}
+                            </div>
+                            <div>
+                                <span class="font-medium text-gray-900 dark:text-white block">{{ post.author.username }}</span>
+                                <span class="text-sm text-gray-500 dark:text-gray-400">Content Creator</span>
+                            </div>
+                        </div>
+                        <p class="text-gray-600 dark:text-gray-400 text-sm">
+                            Passionate about technology and software development. Sharing insights and experiences to help others in the tech community.
+                        </p>
+                    </div>
+
+                    <!-- Table of Contents -->
+                    <div class="bg-gray-50 dark:bg-[#1a1a1f] rounded-2xl p-6 shadow-lg border border-gray-200 dark:border-gray-800">
+                        <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">Table of Contents</h3>
+                        <nav class="space-y-2">
+                            <a href="#" class="toc-item block text-gray-600 dark:text-gray-400 hover:text-primary-500 text-sm">
+                                Introduction
+                            </a>
+                            <a href="#" class="toc-item block text-gray-600 dark:text-gray-400 hover:text-primary-500 text-sm ml-2">
+                                Key Features
+                            </a>
+                            <a href="#" class="toc-item block text-gray-600 dark:text-gray-400 hover:text-primary-500 text-sm ml-2">
+                                Implementation
+                            </a>
+                            <a href="#" class="toc-item block text-gray-600 dark:text-gray-400 hover:text-primary-500 text-sm ml-4">
+                                Best Practices
+                            </a>
+                            <a href="#" class="toc-item block text-gray-600 dark:text-gray-400 hover:text-primary-500 text-sm">
+                                Conclusion
+                            </a>
+                        </nav>
+                    </div>
+                </div>
             </div>
         </div>
-    </main>
+    </div>
+</div>
+{% endblock %}
 
-    <!-- ===== FOOTER ===== -->
-    <footer class="bg-accent-800 text-accent-200 py-12">
-        <div class="container mx-auto px-6">
-            <div class="flex flex-col md:flex-row justify-between items-center">
-                <div class="mb-6 md:mb-0">
-                    <a href="{% url 'home' %}" class="flex items-center space-x-3">
-                        <div class="p-2 bg-primary-500 rounded-lg">
-                            <img class="w-6 h-6" src="{% static 'images/logo.png' %}" alt="Ondrobit-IT Logo">
-                        </div>
-                        <div>
-                            <span class="text-xl font-bold text-white block">Ondrobit</span>
-                            <span class="text-primary-400 font-semibold text-sm -mt-1 block">Ondrobit</span>
-                        </div>
-                    </a>
-                    <p class="mt-4 text-accent-300 max-w-md">Innovative software solutions to transform your business and drive growth in the digital age.</p>
-                </div>
-                <div class="flex space-x-6">
-                    <a href="#" class="text-accent-300 hover:text-white transition-colors">
-                        <i class="fab fa-linkedin-in text-xl"></i>
-                    </a>
-                    <a href="#" class="text-accent-300 hover:text-white transition-colors">
-                        <i class="fab fa-twitter text-xl"></i>
-                    </a>
-                    <a href="#" class="text-accent-300 hover:text-white transition-colors">
-                        <i class="fab fa-github text-xl"></i>
-                    </a>
-                    <a href="#" class="text-accent-300 hover:text-white transition-colors">
-                        <i class="fab fa-facebook-f text-xl"></i>
-                    </a>
-                </div>
-            </div>
-            <div class="border-t border-accent-700 mt-8 pt-8 text-center text-accent-400">
-                <p>&copy; {% now "Y" %} Ondrobit-IT. All rights reserved.</p>
-            </div>
-        </div>
-    </footer>
+{% block extra_js %}
+<script>
+    // Reading progress bar
+    window.addEventListener('scroll', function() {
+        const winHeight = window.innerHeight;
+        const docHeight = document.documentElement.scrollHeight;
+        const scrollTop = window.pageYOffset;
+        const trackLength = docHeight - winHeight;
+        const progress = Math.floor((scrollTop / trackLength) * 100);
+        document.getElementById('reading-progress').style.width = progress + '%';
+    });
 
-    <!-- ===== SCRIPTS ===== -->
-    <script src="{% static 'js/script.js' %}"></script>
-    <script>
-        // Reading progress bar
-        window.addEventListener('scroll', function() {
-            const winHeight = window.innerHeight;
-            const docHeight = document.documentElement.scrollHeight;
-            const scrollTop = window.pageYOffset;
-            const trackLength = docHeight - winHeight;
-            const progress = Math.floor((scrollTop / trackLength) * 100);
-            document.getElementById('reading-progress').style.width = progress + '%';
-        });
-
-        // Smooth scroll for table of contents
-        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-            anchor.addEventListener('click', function (e) {
-                e.preventDefault();
-                const target = document.querySelector(this.getAttribute('href'));
-                if (target) {
-                    target.scrollIntoView({
-                        behavior: 'smooth',
-                        block: 'start'
-                    });
-                }
-            });
-        });
-
-        // Copy code blocks functionality
-        document.addEventListener('DOMContentLoaded', function() {
-            document.querySelectorAll('pre').forEach(pre => {
-                const button = document.createElement('button');
-                button.className = 'absolute top-2 right-2 bg-accent-700 text-white px-2 py-1 rounded text-xs opacity-0 group-hover:opacity-100 transition-opacity';
-                button.innerHTML = '<i class="fas fa-copy mr-1"></i>Copy';
-                button.addEventListener('click', function() {
-                    const code = pre.querySelector('code').innerText;
-                    navigator.clipboard.writeText(code).then(() => {
-                        button.innerHTML = '<i class="fas fa-check mr-1"></i>Copied!';
-                        setTimeout(() => {
-                            button.innerHTML = '<i class="fas fa-copy mr-1"></i>Copy';
-                        }, 2000);
-                    });
+    // Smooth scroll for table of contents
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener('click', function (e) {
+            e.preventDefault();
+            const target = document.querySelector(this.getAttribute('href'));
+            if (target) {
+                target.scrollIntoView({
+                    behavior: 'smooth',
+                    block: 'start'
                 });
-                
-                const wrapper = document.createElement('div');
-                wrapper.className = 'relative group';
-                pre.parentNode.insertBefore(wrapper, pre);
-                wrapper.appendChild(pre);
-                wrapper.appendChild(button);
-            });
+            }
         });
-    </script>
-</body>
-</html>
+    });
+</script>
+{% endblock %}
