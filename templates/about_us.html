@@ -5,9 +5,33 @@
 
 {% block about_active %}text-primary-500 font-semibold border-b-2 border-primary-500{% endblock %}
 
+{% block extra_css %}
+<style>
+    .team-card { transition: transform 0.3s ease, box-shadow 0.3s ease; border: 1px solid transparent; }
+    .team-card:hover { transform: translateY(-8px); box-shadow: 0 25px 50px -12px rgba(255,77,77,0.25); border-color: rgba(255,77,77,.2); }
+    .dark .team-card:hover { box-shadow: 0 25px 50px -12px rgba(255,77,77,0.3); border-color: rgba(255,77,77,.3); }
+    .profile-image { transition: transform 0.3s ease; }
+    .team-card:hover .profile-image { transform: scale(1.05); }
+    .animation-delay-1000 { animation-delay: 1s; }
+    .animation-delay-2000 { animation-delay: 2s; }
+    
+    /* Lottie animation container */
+    .lottie-container {
+        position: relative;
+        z-index: 10;
+    }
+    .lottie-container dotlottie-wc {
+        filter: drop-shadow(0 20px 30px rgba(0,0,0,0.1));
+    }
+    .dark .lottie-container dotlottie-wc {
+        filter: drop-shadow(0 20px 30px rgba(0,0,0,0.3));
+    }
+</style>
+{% endblock %}
+
 {% block content %}
 
-<!-- Hero Section -->
+<!-- Hero Section with Lottie Animation -->
 <section class="relative py-20 bg-gradient-to-br from-primary-500 via-accent-500 to-black dark:from-primary-900 dark:via-accent-900 dark:to-black overflow-hidden">
     <!-- Animated Orbs -->
     <div class="absolute inset-0 overflow-hidden">
@@ -16,53 +40,32 @@
         <div class="absolute top-1/2 right-1/4 w-40 h-40 bg-white opacity-10 rounded-full blur-2xl animate-pulse animation-delay-1000"></div>
     </div>
     
-    <div class="relative container mx-auto px-4 text-center z-10">
-        <h1 class="text-4xl md:text-5xl font-bold mb-6 text-white" data-aos="fade-up">
-            Meet Our <span class="text-white drop-shadow-lg">Expert Team</span>
-        </h1>
-        <p class="text-xl text-white/90 max-w-3xl mx-auto mb-8" data-aos="fade-up" data-aos-delay="200">
-            Get to know the talented professionals behind Ondrobit. Our team combines technical expertise 
-            with creative problem-solving to deliver exceptional software solutions.
-        </p>
-    </div>
-</section>
-
-<!-- Company Story Section -->
-<section class="py-16 bg-white dark:bg-black">
-    <div class="container mx-auto px-4">
-        <div class="max-w-4xl mx-auto text-center" data-aos="fade-up">
-            <h2 class="text-3xl font-bold text-gray-900 dark:text-white mb-6">Our Story</h2>
-            <p class="text-lg text-gray-600 dark:text-gray-300 leading-relaxed mb-8">
-                Founded with a vision to revolutionize the software development industry, Ondrobit brings together 
-                passionate professionals dedicated to creating innovative solutions that drive business growth and 
-                technological advancement.
-            </p>
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mt-12">
-                <div class="text-center" data-aos="fade-up" data-aos-delay="100">
-                    <div class="w-16 h-16 bg-gradient-to-br from-primary-500 to-accent-500 rounded-full flex items-center justify-center mx-auto mb-4 shadow-lg">
-                        <i class="fas fa-rocket text-white text-2xl"></i>
-                    </div>
-                    <h3 class="text-xl font-semibold text-gray-900 dark:text-white mb-2">Innovation</h3>
-                    <p class="text-gray-600 dark:text-gray-400">Pushing boundaries with cutting-edge technology</p>
-                </div>
-                <div class="text-center" data-aos="fade-up" data-aos-delay="200">
-                    <div class="w-16 h-16 bg-gradient-to-br from-primary-500 to-accent-500 rounded-full flex items-center justify-center mx-auto mb-4 shadow-lg">
-                        <i class="fas fa-users text-white text-2xl"></i>
-                    </div>
-                    <h3 class="text-xl font-semibold text-gray-900 dark:text-white mb-2">Collaboration</h3>
-                    <p class="text-gray-600 dark:text-gray-400">Working together to achieve exceptional results</p>
-                </div>
-                <div class="text-center" data-aos="fade-up" data-aos-delay="300">
-                    <div class="w-16 h-16 bg-gradient-to-br from-primary-500 to-accent-500 rounded-full flex items-center justify-center mx-auto mb-4 shadow-lg">
-                        <i class="fas fa-medal text-white text-2xl"></i>
-                    </div>
-                    <h3 class="text-xl font-semibold text-gray-900 dark:text-white mb-2">Excellence</h3>
-                    <p class="text-gray-600 dark:text-gray-400">Committed to delivering quality in everything we do</p>
-                </div>
+    <div class="relative container mx-auto px-4 z-10">
+        <div class="flex flex-col lg:flex-row items-center justify-between gap-12">
+            <!-- Left Content -->
+            <div class="flex-1 text-center lg:text-left" data-aos="fade-right">
+                <h1 class="text-4xl md:text-5xl font-bold mb-6 text-white">
+                    Meet Our <span class="text-white drop-shadow-lg">Expert Team</span>
+                </h1>
+                <p class="text-xl text-white/90 max-w-3xl mx-auto lg:mx-0 mb-8">
+                    Get to know the talented professionals behind Ondrobit. Our team combines technical expertise 
+                    with creative problem-solving to deliver exceptional software solutions.
+                </p>
+            </div>
+            
+            <!-- Right Lottie Animation -->
+            <div class="flex-1 lottie-container" data-aos="fade-left">
+                <dotlottie-wc
+                    src="https://lottie.host/2fb168b5-70a3-455c-8dfd-4c8a6386285d/touWNhff0f.lottie"
+                    style="width: 100%; max-width: 500px; height: auto; aspect-ratio: 1/1; margin: 0 auto;"
+                    autoplay
+                    loop
+                ></dotlottie-wc>
             </div>
         </div>
     </div>
 </section>
+
 <!-- Team Section -->
 <section class="py-20 bg-gray-50 dark:bg-gray-900 overflow-hidden">
     <div class="container mx-auto px-4">
@@ -154,6 +157,43 @@
     </div>
 </section>
 
+<!-- Company Story Section -->
+<section class="py-16 bg-white dark:bg-black">
+    <div class="container mx-auto px-4">
+        <div class="max-w-4xl mx-auto text-center" data-aos="fade-up">
+            <h2 class="text-3xl font-bold text-gray-900 dark:text-white mb-6">Our Story</h2>
+            <p class="text-lg text-gray-600 dark:text-gray-300 leading-relaxed mb-8">
+                Founded with a vision to revolutionize the software development industry, Ondrobit brings together 
+                passionate professionals dedicated to creating innovative solutions that drive business growth and 
+                technological advancement.
+            </p>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mt-12">
+                <div class="text-center" data-aos="fade-up" data-aos-delay="100">
+                    <div class="w-16 h-16 bg-gradient-to-br from-primary-500 to-accent-500 rounded-full flex items-center justify-center mx-auto mb-4 shadow-lg">
+                        <i class="fas fa-rocket text-white text-2xl"></i>
+                    </div>
+                    <h3 class="text-xl font-semibold text-gray-900 dark:text-white mb-2">Innovation</h3>
+                    <p class="text-gray-600 dark:text-gray-400">Pushing boundaries with cutting-edge technology</p>
+                </div>
+                <div class="text-center" data-aos="fade-up" data-aos-delay="200">
+                    <div class="w-16 h-16 bg-gradient-to-br from-primary-500 to-accent-500 rounded-full flex items-center justify-center mx-auto mb-4 shadow-lg">
+                        <i class="fas fa-users text-white text-2xl"></i>
+                    </div>
+                    <h3 class="text-xl font-semibold text-gray-900 dark:text-white mb-2">Collaboration</h3>
+                    <p class="text-gray-600 dark:text-gray-400">Working together to achieve exceptional results</p>
+                </div>
+                <div class="text-center" data-aos="fade-up" data-aos-delay="300">
+                    <div class="w-16 h-16 bg-gradient-to-br from-primary-500 to-accent-500 rounded-full flex items-center justify-center mx-auto mb-4 shadow-lg">
+                        <i class="fas fa-medal text-white text-2xl"></i>
+                    </div>
+                    <h3 class="text-xl font-semibold text-gray-900 dark:text-white mb-2">Excellence</h3>
+                    <p class="text-gray-600 dark:text-gray-400">Committed to delivering quality in everything we do</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
 <!-- WhatsApp Section -->
 <section class="py-12 sm:py-16 bg-gradient-to-r from-green-500 to-green-600 text-white overflow-hidden">
     <div class="container mx-auto px-4 sm:px-6">
@@ -206,16 +246,24 @@
         </span>
     </a>
 </div>
+{% endblock %}
 
-<style>
-    .team-card { transition: transform 0.3s ease, box-shadow 0.3s ease; border: 1px solid transparent; }
-    .team-card:hover { transform: translateY(-8px); box-shadow: 0 25px 50px -12px rgba(255,77,77,0.25); border-color: rgba(255,77,77,.2); }
-    .dark .team-card:hover { box-shadow: 0 25px 50px -12px rgba(255,77,77,0.3); border-color: rgba(255,77,77,.3); }
-    .profile-image { transition: transform 0.3s ease; }
-    .team-card:hover .profile-image { transform: scale(1.05); }
-    .animation-delay-1000 { animation-delay: 1s; }
-    .animation-delay-2000 { animation-delay: 2s; }
-</style>
+{% block extra_js %}
+<!-- Lottie Animation Script -->
+<script src="https://unpkg.com/@lottiefiles/dotlottie-wc@0.9.3/dist/dotlottie-wc.js" type="module"></script>
 
-<!-- Remove extra AOS script since it's already in base.html -->
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Ensure Lottie animation is properly loaded
+        const lottiePlayer = document.querySelector('dotlottie-wc');
+        if (lottiePlayer) {
+            console.log('Lottie animation loaded successfully');
+            
+            // Optional: Add error handling
+            lottiePlayer.addEventListener('error', function(e) {
+                console.error('Lottie animation failed to load', e);
+            });
+        }
+    });
+</script>
 {% endblock %}
