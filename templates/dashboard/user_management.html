@@ -1,118 +1,387 @@
+{% extends 'base.html' %}
 {% load static %}
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>User Management</title>
-    
-    <script src="https://cdn.tailwindcss.com/3.4.3"></script>
-    <script>
-        tailwind.config = {
-            darkMode: 'class',
-            theme: {
-                extend: {}
-            }
-        }
-    </script>
-    
-    <link rel="icon" type="image/png" href="{% static 'images/icon.png' %}">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="styFFlesheet" href="{% static 'css/style.css' %}">
-    
-    <script>
-        if (localStorage.getItem('color-theme') === 'dark' || (!('color-theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
-            document.documentElement.classList.add('dark');
-        } else {
-            document.documentElement.classList.remove('dark');
-        }
-    </script>
-</head>
-<body class="bg-gray-50 dark:bg-gray-900 text-gray-800 dark:text-gray-200 font-sans">
-    
-    <header class="bg-white dark:bg-gray-800 shadow-md fixed w-full z-10">
-        <nav class="container mx-auto px-4 py-3 flex justify-between items-center">
-            <a href="{% url 'home' %}" class="flex items-center space-x-2">
-                <img class="w-10 h-10" src="{% static 'images/logo.png' %}" alt="IT Logo">
-                <span class="text-xl font-bold">Ondrobit</span>
-            </a>
-            <div class="hidden md:flex space-x-8">
-                <a href="{% url 'home' %}" class="nav-link">Home</a>
-                <a href="{% url 'services' %}" class="nav-link">Services</a>
-                <a href="{% url 'blog' %}" class="nav-link">Blog</a>
-                <a href="{% url 'about_us' %}" class="nav-link">About Us</a>
-                <a href="{% url 'review_page' %}" class="nav-link">Review</a>
-            </div>
-            <div class="flex items-center space-x-4">
-                <button id="theme-toggle" class="p-2 rounded-lg bg-gray-100 hover:bg-gray-200 dark:bg-gray-700 dark:hover:bg-gray-600">
-                    <span class="dark:hidden">🌙</span><span class="hidden dark:inline">☀️</span>
-                </button>
-                {% if user.is_authenticated %}
-                    {% if user.profile.role == 'SUPERADMIN' %}
-                        <a href="{% url 'dashboard' %}" class="bg-purple-600 hover:bg-purple-700 text-white px-4 py-2 rounded-lg font-medium transition">Dashboard</a>
-                    {% endif %}
-                    <a href="{% url 'logout' %}" class="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-lg font-medium transition">Logout</a>
-                {% else %}
-                    <a href="{% url 'login' %}" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg font-medium transition">Login</a>
-                {% endif %}
-            </div>
-        </nav>
-    </header>
 
-    <main class="pt-20">
-        <div class="container mx-auto px-4 py-8">
-            <h1 class="text-3xl font-bold mb-6 dark:text-white">User Management</h1>
+{% block title %}User Management - Ondrobit{% endblock %}
+
+{% block extra_css %}
+<style>
+    .user-table {
+        transition: all 0.3s ease;
+    }
+    .user-row {
+        transition: all 0.3s ease;
+    }
+    .user-row:hover {
+        background-color: rgba(255, 77, 77, 0.05);
+        transform: translateX(5px);
+    }
+    .dark .user-row:hover {
+        background-color: rgba(255, 77, 77, 0.1);
+    }
+    .role-badge {
+        transition: all 0.3s ease;
+    }
+    .role-badge:hover {
+        transform: scale(1.05);
+    }
+    .action-button {
+        transition: all 0.2s ease;
+    }
+    .action-button:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    }
+    .filter-active {
+        border-bottom: 2px solid #ff4d4d;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="min-h-screen bg-gray-50 dark:bg-[#0f0f12] py-8">
+    <div class="container mx-auto px-4 sm:px-6">
+        
+        <!-- Header Section -->
+        <div class="mb-8" data-aos="fade-down">
+            <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+                <div>
+                    <h1 class="text-3xl md:text-4xl font-bold text-gray-900 dark:text-white mb-2">
+                        User Management
+                    </h1>
+                    <p class="text-gray-600 dark:text-gray-400">
+                        Manage user roles, permissions, and access control for your website
+                    </p>
+                </div>
+                <div class="flex items-center space-x-3">
+                    <span class="bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-300 px-4 py-2 rounded-lg text-sm font-medium">
+                        <i class="fas fa-users mr-2"></i>
+                        Total Users: {{ users|length }}
+                    </span>
+                </div>
+            </div>
+        </div>
+
+        <!-- User Statistics -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8" data-aos="fade-up">
+            <div class="bg-white dark:bg-[#1a1a1f] p-4 rounded-xl shadow-md border border-gray-200 dark:border-gray-800">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-sm text-gray-500 dark:text-gray-400">Super Admins</p>
+                        <p class="text-2xl font-bold text-gray-900 dark:text-white">
+                            {{ users|dictsortreversed:"profile.role"|length }}
+                        </p>
+                    </div>
+                    <div class="w-10 h-10 bg-red-100 dark:bg-red-900/30 rounded-lg flex items-center justify-center">
+                        <i class="fas fa-crown text-red-500"></i>
+                    </div>
+                </div>
+            </div>
             
-            <div class="bg-white dark:bg-gray-800 shadow-md rounded-lg overflow-hidden">
-                <table class="min-w-full leading-normal">
-                    <thead>
+            <div class="bg-white dark:bg-[#1a1a1f] p-4 rounded-xl shadow-md border border-gray-200 dark:border-gray-800">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-sm text-gray-500 dark:text-gray-400">Clients</p>
+                        <p class="text-2xl font-bold text-gray-900 dark:text-white">
+                            {{ users|dictsortreversed:"profile.role"|length }}
+                        </p>
+                    </div>
+                    <div class="w-10 h-10 bg-green-100 dark:bg-green-900/30 rounded-lg flex items-center justify-center">
+                        <i class="fas fa-handshake text-green-500"></i>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="bg-white dark:bg-[#1a1a1f] p-4 rounded-xl shadow-md border border-gray-200 dark:border-gray-800">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-sm text-gray-500 dark:text-gray-400">Visitors</p>
+                        <p class="text-2xl font-bold text-gray-900 dark:text-white">
+                            {{ users|dictsortreversed:"profile.role"|length }}
+                        </p>
+                    </div>
+                    <div class="w-10 h-10 bg-blue-100 dark:bg-blue-900/30 rounded-lg flex items-center justify-center">
+                        <i class="fas fa-user text-blue-500"></i>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="bg-white dark:bg-[#1a1a1f] p-4 rounded-xl shadow-md border border-gray-200 dark:border-gray-800">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-sm text-gray-500 dark:text-gray-400">Active Today</p>
+                        <p class="text-2xl font-bold text-gray-900 dark:text-white">12</p>
+                    </div>
+                    <div class="w-10 h-10 bg-purple-100 dark:bg-purple-900/30 rounded-lg flex items-center justify-center">
+                        <i class="fas fa-clock text-purple-500"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Filters and Search -->
+        <div class="bg-white dark:bg-[#1a1a1f] rounded-xl shadow-md border border-gray-200 dark:border-gray-800 p-4 mb-6" data-aos="fade-up">
+            <div class="flex flex-col md:flex-row justify-between items-center gap-4">
+                <div class="flex items-center space-x-4">
+                    <span class="text-sm font-medium text-gray-700 dark:text-gray-300">Filter by Role:</span>
+                    <div class="flex space-x-2">
+                        <button class="px-3 py-1 text-sm bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 rounded-full hover:bg-primary-500 hover:text-white transition-colors filter-btn active" data-filter="all">All</button>
+                        <button class="px-3 py-1 text-sm bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 rounded-full hover:bg-primary-500 hover:text-white transition-colors filter-btn" data-filter="SUPERADMIN">Super Admin</button>
+                        <button class="px-3 py-1 text-sm bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 rounded-full hover:bg-primary-500 hover:text-white transition-colors filter-btn" data-filter="CLIENT">Client</button>
+                        <button class="px-3 py-1 text-sm bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 rounded-full hover:bg-primary-500 hover:text-white transition-colors filter-btn" data-filter="VISITOR">Visitor</button>
+                    </div>
+                </div>
+                <div class="relative w-full md:w-64">
+                    <input type="text" placeholder="Search users..." 
+                           class="w-full px-4 py-2 pl-10 border border-gray-300 dark:border-gray-700 rounded-lg bg-white dark:bg-[#0f0f12] text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary-500"
+                           id="searchInput">
+                    <i class="fas fa-search absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
+                </div>
+            </div>
+        </div>
+
+        <!-- Users Table -->
+        <div class="bg-white dark:bg-[#1a1a1f] rounded-xl shadow-md border border-gray-200 dark:border-gray-800 overflow-hidden" data-aos="fade-up">
+            <div class="overflow-x-auto">
+                <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-800 user-table">
+                    <thead class="bg-gray-50 dark:bg-gray-900">
                         <tr>
-                            <th class="px-5 py-3 border-b-2 border-gray-200 dark:border-gray-700 bg-gray-100 dark:bg-gray-900 text-left text-xs font-semibold text-gray-600 dark:text-gray-300 uppercase tracking-wider">Username</th>
-                            <th class="px-5 py-3 border-b-2 border-gray-200 dark:border-gray-700 bg-gray-100 dark:bg-gray-900 text-left text-xs font-semibold text-gray-600 dark:text-gray-300 uppercase tracking-wider">Email</th>
-                            <th class="px-5 py-3 border-b-2 border-gray-200 dark:border-gray-700 bg-gray-100 dark:bg-gray-900 text-left text-xs font-semibold text-gray-600 dark:text-gray-300 uppercase tracking-wider">Current Role</th>
-                            <th class="px-5 py-3 border-b-2 border-gray-200 dark:border-gray-700 bg-gray-100 dark:bg-gray-900 text-left text-xs font-semibold text-gray-600 dark:text-gray-300 uppercase tracking-wider">Change Role</th>
+                            <th class="px-6 py-4 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">User</th>
+                            <th class="px-6 py-4 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Email</th>
+                            <th class="px-6 py-4 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Current Role</th>
+                            <th class="px-6 py-4 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Status</th>
+                            <th class="px-6 py-4 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Last Login</th>
+                            <th class="px-6 py-4 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Actions</th>
                         </tr>
                     </thead>
-                    <tbody>
+                    <tbody class="bg-white dark:bg-[#1a1a1f] divide-y divide-gray-200 dark:divide-gray-800">
                         {% for u in users %}
-                        <tr>
-                            <td class="px-5 py-5 border-b border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 text-sm">
-                                <p class="text-gray-900 dark:text-white whitespace-no-wrap">{{ u.username }}</p>
+                        <tr class="user-row {% if u.is_superuser %}bg-yellow-50 dark:bg-yellow-900/10{% endif %}" data-role="{% if u.is_superuser %}SUPERADMIN{% else %}{{ u.profile.role }}{% endif %}">
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <div class="flex items-center">
+                                    <div class="flex-shrink-0 h-10 w-10">
+                                        <div class="h-10 w-10 rounded-full bg-gradient-to-br from-primary-500 to-primary-600 flex items-center justify-center text-white font-bold">
+                                            {{ u.username|first|upper }}
+                                        </div>
+                                    </div>
+                                    <div class="ml-4">
+                                        <div class="text-sm font-medium text-gray-900 dark:text-white">
+                                            {{ u.username }}
+                                            {% if u.is_superuser %}
+                                                <span class="ml-2 text-xs bg-yellow-100 dark:bg-yellow-900/30 text-yellow-700 dark:text-yellow-300 px-2 py-0.5 rounded-full">Primary</span>
+                                            {% endif %}
+                                        </div>
+                                        <div class="text-sm text-gray-500 dark:text-gray-400">
+                                            Joined: {{ u.date_joined|date:"M d, Y" }}
+                                        </div>
+                                    </div>
+                                </div>
                             </td>
-                            <td class="px-5 py-5 border-b border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 text-sm">
-                                <p class="text-gray-900 dark:text-white whitespace-no-wrap">{{ u.email }}</p>
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <div class="text-sm text-gray-900 dark:text-white">{{ u.email }}</div>
                             </td>
-                            <td class="px-5 py-5 border-b border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 text-sm">
-                                <span class="relative inline-block px-3 py-1 font-semibold leading-tight
-                                    {% if u.profile.role == 'SUPERADMIN' %} text-red-900 bg-red-200 {% elif u.profile.role == 'CLIENT' %} text-green-900 bg-green-200 {% else %} text-gray-700 bg-gray-200 {% endif %} rounded-full">
-                                    <span aria-hidden class="absolute inset-0 opacity-50 rounded-full"></span>
-                                    <span class="relative">{{ u.profile.get_role_display }}</span>
-                                </span>
-                            </td>
-                            <td class="px-5 py-5 border-b border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 text-sm">
-                                {% if not u.is_superuser %}
-                                <form method="POST" class="inline-flex">
-                                    {% csrf_token %}
-                                    <input type="hidden" name="user_id" value="{{ u.id }}">
-                                    <select name="role" class="p-1 rounded bg-gray-200 dark:bg-gray-700 dark:text-white">
-                                        <option value="SUPERADMIN" {% if u.profile.role == 'SUPERADMIN' %}selected{% endif %}>Superadmin</option>
-                                        <option value="CLIENT" {% if u.profile.role == 'CLIENT' %}selected{% endif %}>Client</option>
-                                        <option value="VISITOR" {% if u.profile.role == 'VISITOR' %}selected{% endif %}>Visitor</option>
-                                    </select>
-                                    <button type="submit" class="ml-2 px-2 py-1 bg-blue-500 text-white rounded hover:bg-blue-600 text-xs">Save</button>
-                                </form>
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                {% if u.is_superuser %}
+                                    <span class="role-badge inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-yellow-100 dark:bg-yellow-900/30 text-yellow-700 dark:text-yellow-300">
+                                        <i class="fas fa-crown mr-1"></i> Primary Admin
+                                    </span>
                                 {% else %}
-                                <p class="text-gray-500 text-xs">Primary Admin</p>
+                                    <span class="role-badge inline-flex items-center px-3 py-1 rounded-full text-xs font-medium 
+                                        {% if u.profile.role == 'SUPERADMIN' %}
+                                            bg-red-100 dark:bg-red-900/30 text-red-700 dark:text-red-300
+                                        {% elif u.profile.role == 'CLIENT' %}
+                                            bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-300
+                                        {% else %}
+                                            bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300
+                                        {% endif %}">
+                                        <i class="fas 
+                                            {% if u.profile.role == 'SUPERADMIN' %} fa-crown
+                                            {% elif u.profile.role == 'CLIENT' %} fa-handshake
+                                            {% else %} fa-user
+                                            {% endif %} mr-1">
+                                        </i>
+                                        {{ u.profile.get_role_display }}
+                                    </span>
                                 {% endif %}
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                {% if u.is_active %}
+                                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 dark:bg-green-900/30 text-green-800 dark:text-green-300">
+                                        <span class="w-1.5 h-1.5 bg-green-500 rounded-full mr-1.5 animate-pulse"></span>
+                                        Active
+                                    </span>
+                                {% else %}
+                                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 dark:bg-gray-800 text-gray-800 dark:text-gray-300">
+                                        <span class="w-1.5 h-1.5 bg-gray-500 rounded-full mr-1.5"></span>
+                                        Inactive
+                                    </span>
+                                {% endif %}
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">
+                                {{ u.last_login|date:"M d, Y H:i"|default:"Never" }}
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                                {% if not u.is_superuser %}
+                                    <form method="POST" class="inline-flex items-center space-x-2">
+                                        {% csrf_token %}
+                                        <input type="hidden" name="user_id" value="{{ u.id }}">
+                                        <select name="role" class="px-2 py-1.5 text-xs border border-gray-300 dark:border-gray-700 rounded-lg bg-white dark:bg-[#0f0f12] text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary-500">
+                                            <option value="SUPERADMIN" {% if u.profile.role == 'SUPERADMIN' %}selected{% endif %}>Super Admin</option>
+                                            <option value="CLIENT" {% if u.profile.role == 'CLIENT' %}selected{% endif %}>Client</option>
+                                            <option value="VISITOR" {% if u.profile.role == 'VISITOR' %}selected{% endif %}>Visitor</option>
+                                        </select>
+                                        <button type="submit" class="action-button px-3 py-1.5 bg-primary-500 hover:bg-primary-600 text-white text-xs rounded-lg transition-all duration-300 flex items-center">
+                                            <i class="fas fa-save mr-1"></i> Save
+                                        </button>
+                                    </form>
+                                    
+                                    <!-- Toggle Active Status -->
+                                    <form method="POST" class="inline-flex ml-2">
+                                        {% csrf_token %}
+                                        <input type="hidden" name="user_id" value="{{ u.id }}">
+                                        <input type="hidden" name="toggle_active" value="true">
+                                        <button type="submit" class="action-button px-3 py-1.5 {% if u.is_active %}bg-yellow-500 hover:bg-yellow-600{% else %}bg-green-500 hover:bg-green-600{% endif %} text-white text-xs rounded-lg transition-all duration-300 flex items-center">
+                                            <i class="fas {% if u.is_active %}fa-ban{% else %}fa-check{% endif %} mr-1"></i>
+                                            {% if u.is_active %}Deactivate{% else %}Activate{% endif %}
+                                        </button>
+                                    </form>
+                                {% else %}
+                                    <span class="text-xs text-gray-500 dark:text-gray-400 italic">System Admin</span>
+                                {% endif %}
+                            </td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="6" class="px-6 py-12 text-center">
+                                <div class="flex flex-col items-center">
+                                    <div class="w-20 h-20 bg-gray-100 dark:bg-gray-800 rounded-full flex items-center justify-center mb-4">
+                                        <i class="fas fa-users text-3xl text-gray-400"></i>
+                                    </div>
+                                    <h3 class="text-lg font-medium text-gray-900 dark:text-white mb-2">No Users Found</h3>
+                                    <p class="text-gray-500 dark:text-gray-400">There are no users to display at the moment.</p>
+                                </div>
                             </td>
                         </tr>
                         {% endfor %}
                     </tbody>
                 </table>
             </div>
+            
+            <!-- Table Footer with Pagination -->
+            <div class="bg-gray-50 dark:bg-gray-900 px-6 py-4 border-t border-gray-200 dark:border-gray-800">
+                <div class="flex flex-col sm:flex-row justify-between items-center gap-4">
+                    <div class="text-sm text-gray-700 dark:text-gray-300">
+                        Showing <span class="font-medium">1</span> to <span class="font-medium">{{ users|length }}</span> of <span class="font-medium">{{ users|length }}</span> users
+                    </div>
+                    <div class="flex space-x-2">
+                        <button class="px-3 py-1 bg-white dark:bg-[#1a1a1f] border border-gray-300 dark:border-gray-700 rounded-lg text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800 disabled:opacity-50" disabled>
+                            Previous
+                        </button>
+                        <button class="px-3 py-1 bg-white dark:bg-[#1a1a1f] border border-gray-300 dark:border-gray-700 rounded-lg text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800">
+                            Next
+                        </button>
+                    </div>
+                </div>
+            </div>
         </div>
-    </main>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Filter functionality
+        const filterButtons = document.querySelectorAll('.filter-btn');
+        const userRows = document.querySelectorAll('.user-row');
+        const searchInput = document.getElementById('searchInput');
+        
+        // Role filter
+        filterButtons.forEach(button => {
+            button.addEventListener('click', function() {
+                // Remove active class from all buttons
+                filterButtons.forEach(btn => {
+                    btn.classList.remove('bg-primary-500', 'text-white');
+                    btn.classList.add('bg-gray-100', 'dark:bg-gray-800', 'text-gray-700', 'dark:text-gray-300');
+                });
+                
+                // Add active class to clicked button
+                this.classList.remove('bg-gray-100', 'dark:bg-gray-800', 'text-gray-700', 'dark:text-gray-300');
+                this.classList.add('bg-primary-500', 'text-white');
+                
+                const filterValue = this.getAttribute('data-filter');
+                
+                userRows.forEach(row => {
+                    const role = row.getAttribute('data-role');
+                    if (filterValue === 'all' || role === filterValue) {
+                        row.style.display = '';
+                    } else {
+                        row.style.display = 'none';
+                    }
+                });
+            });
+        });
+        
+        // Search functionality
+        searchInput.addEventListener('input', function() {
+            const searchTerm = this.value.toLowerCase();
+            
+            userRows.forEach(row => {
+                const username = row.querySelector('.font-medium')?.textContent.toLowerCase() || '';
+                const email = row.querySelector('td:nth-child(2)')?.textContent.toLowerCase() || '';
+                
+                if (username.includes(searchTerm) || email.includes(searchTerm)) {
+                    row.style.display = '';
+                } else {
+                    row.style.display = 'none';
+                }
+            });
+        });
+        
+        // Form submission handling with confirmation
+        const forms = document.querySelectorAll('form');
+        forms.forEach(form => {
+            form.addEventListener('submit', function(e) {
+                if (this.querySelector('input[name="toggle_active"]')) {
+                    const action = this.querySelector('button').textContent.trim();
+                    if (!confirm(`Are you sure you want to ${action.toLowerCase()} this user?`)) {
+                        e.preventDefault();
+                    }
+                } else if (this.querySelector('select[name="role"]')) {
+                    if (!confirm('Are you sure you want to change this user\'s role?')) {
+                        e.preventDefault();
+                    }
+                }
+            });
+        });
+        
+        // Success message display (if any)
+        const urlParams = new URLSearchParams(window.location.search);
+        if (urlParams.get('success')) {
+            const message = urlParams.get('success');
+            showNotification(message, 'success');
+        } else if (urlParams.get('error')) {
+            const message = urlParams.get('error');
+            showNotification(message, 'error');
+        }
+    });
     
-    <script src="{% static 'js/script.js' %}"></script>
-</body>
-</html>
+    // Notification function
+    function showNotification(message, type) {
+        const notification = document.createElement('div');
+        notification.className = `fixed top-4 right-4 px-6 py-3 rounded-lg shadow-lg z-50 animate-slide-in ${
+            type === 'success' ? 'bg-green-500' : 'bg-red-500'
+        } text-white`;
+        notification.innerHTML = `
+            <div class="flex items-center">
+                <i class="fas ${type === 'success' ? 'fa-check-circle' : 'fa-exclamation-circle'} mr-2"></i>
+                <span>${message}</span>
+            </div>
+        `;
+        document.body.appendChild(notification);
+        
+        setTimeout(() => {
+            notification.remove();
+        }, 3000);
+    }
+</script>
+{% endblock %}

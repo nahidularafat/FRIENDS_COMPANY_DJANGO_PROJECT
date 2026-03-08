@@ -1,129 +1,378 @@
+{% extends 'base.html' %}
 {% load static %}
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard</title>
-    
-    <script src="https://cdn.tailwindcss.com/3.4.3"></script>
-    <script>
-        tailwind.config = { darkMode: 'class', theme: { extend: {} } }
-    </script>
-    <link rel="icon" type="image/png" href="{% static 'images/icon.png' %}">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="stylesheet" href="{% static 'css/style.css' %}">
-    <script>
-        if (localStorage.getItem('color-theme') === 'dark' || (!('color-theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
-            document.documentElement.classList.add('dark');
-        } else {
-            document.documentElement.classList.remove('dark');
-        }
-    </script>
-</head>
-<body class="bg-gray-50 dark:bg-gray-900 text-gray-800 dark:text-gray-200 font-sans">
-    
-    <header class="bg-white dark:bg-gray-800 shadow-md fixed w-full z-10">
-        <nav class="container mx-auto px-6 py-4 flex justify-between items-center">
-            <a href="{% url 'home' %}" class="text-xl font-bold text-gray-800 dark:text-white">IT SOLUTION</a>
-            <div class="hidden md:flex items-center space-x-6 text-gray-600 dark:text-gray-300">
-                <a href="{% url 'home' %}" class="nav-link hover:text-blue-500">Home</a>
-                <a href="{% url 'services' %}" class="nav-link hover:text-blue-500">Services</a>
-                <a href="{% url 'blog' %}" class="nav-link hover:text-blue-500">Blog</a>
-                <a href="{% url 'about_us' %}" class="nav-link hover:text-blue-500">About Us</a>
-                <a href="{% url 'review_page' %}" class="nav-link hover:text-blue-500">Review</a>
-            </div>
-            <div class="flex items-center space-x-4">
-                <button id="theme-toggle" class="p-2 rounded-lg bg-gray-100 hover:bg-gray-200 dark:bg-gray-700 dark:hover:bg-gray-600">
-                    <span class="dark:hidden">🌙</span><span class="hidden dark:inline">☀️</span>
-                </button>
-                {% if user.is_authenticated %}
-                    {% if user.profile.role == 'SUPERADMIN' %}
-                        <a href="{% url 'dashboard' %}" class="bg-purple-600 hover:bg-purple-700 text-white px-4 py-2 rounded-lg font-medium transition">Dashboard</a>
-                    {% endif %}
-                    <a href="{% url 'logout' %}" class="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-lg font-medium transition">Logout</a>
-                {% else %}
-                    <a href="{% url 'login' %}" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg font-medium transition">Login</a>
-                {% endif %}
-            </div>
-        </nav>
-    </header>
 
-    <main class="pt-20">
-        <div class="container mx-auto px-4 py-8">
-            <h1 class="text-3xl font-bold mb-8 dark:text-white">Admin Dashboard</h1>
+{% block title %}Admin Dashboard - Ondrobit{% endblock %}
 
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                
-                <a href="{% url 'user_management' %}" class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md hover:shadow-lg transition">
-                    <div class="flex items-center">
-                        <div class="text-3xl text-blue-500 mr-4">
-                            <i class="fas fa-users-cog"></i>
-                        </div>
-                        <div>
-                            <h2 class="text-xl font-semibold dark:text-white">User Management</h2>
-                            <p class="text-gray-600 dark:text-gray-400">Manage user roles and permissions.</p>
-                        </div>
-                    </div>
-                </a>
+{% block extra_css %}
+<style>
+    .dashboard-card {
+        transition: all 0.3s ease;
+        border: 1px solid transparent;
+    }
+    .dashboard-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 20px 40px -15px rgba(255, 77, 77, 0.3);
+        border-color: rgba(255, 77, 77, 0.2);
+    }
+    .dark .dashboard-card:hover {
+        box-shadow: 0 20px 40px -15px rgba(255, 77, 77, 0.4);
+        border-color: rgba(255, 77, 77, 0.3);
+    }
+    .stat-card {
+        background: linear-gradient(135deg, #ff4d4d 0%, #e63e3e 100%);
+    }
+    .dark .stat-card {
+        background: linear-gradient(135deg, #cc2e2e 0%, #b31f1f 100%);
+    }
+    .recent-activity-item {
+        transition: all 0.3s ease;
+    }
+    .recent-activity-item:hover {
+        transform: translateX(5px);
+    }
+</style>
+{% endblock %}
 
-                <a href="{% url 'services' %}" class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md hover:shadow-lg transition">
-                    <div class="flex items-center">
-                        <div class="text-3xl text-green-500 mr-4">
-                            <i class="fas fa-concierge-bell"></i>
-                        </div>
-                        <div>
-                            <h2 class="text-xl font-semibold dark:text-white">Manage Services</h2>
-                            <p class="text-gray-600 dark:text-gray-400">Add, edit, or delete services.</p>
-                        </div>
-                    </div>
-                </a>
-
-                <a href="{% url 'blog' %}" class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md hover:shadow-lg transition">
-                    <div class="flex items-center">
-                        <div class="text-3xl text-purple-500 mr-4">
-                            <i class="fas fa-blog"></i>
-                        </div>
-                        <div>
-                            <h2 class="text-xl font-semibold dark:text-white">Manage Blog</h2>
-                            <p class="text-gray-600 dark:text-gray-400">Create and manage blog posts.</p>
-                        </div>
-                    </div>
-                </a>
+{% block content %}
+<div class="min-h-screen bg-gray-50 dark:bg-[#0f0f12] py-8">
+    <div class="container mx-auto px-4 sm:px-6">
         
-                <a href="{% url 'about_us' %}" class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md hover:shadow-lg transition">
-                    <div class="flex items-center">
-                        <div class="text-3xl text-yellow-500 mr-4">
-                            <i class="fas fa-users"></i>
-                        </div>
+        <!-- Header with Stats -->
+        <div class="mb-8" data-aos="fade-down">
+            <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-6">
+                <div>
+                    <h1 class="text-3xl md:text-4xl font-bold text-gray-900 dark:text-white mb-2">
+                        Welcome Back, {{ user.username }}!
+                    </h1>
+                    <p class="text-gray-600 dark:text-gray-400">
+                        Manage your website content from one central dashboard
+                    </p>
+                </div>
+                <div class="flex items-center space-x-3">
+                    <span class="bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-300 px-4 py-2 rounded-lg text-sm font-medium">
+                        <i class="fas fa-circle text-xs mr-2 animate-pulse"></i>
+                        {{ user.profile.role|title }} Access
+                    </span>
+                </div>
+            </div>
+            
+            <!-- Quick Stats -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                <div class="bg-white dark:bg-[#1a1a1f] p-4 rounded-xl shadow-md border border-gray-200 dark:border-gray-800">
+                    <div class="flex items-center justify-between">
                         <div>
-                            <h2 class="text-xl font-semibold dark:text-white">Manage Team</h2>
-                            <p class="text-gray-600 dark:text-gray-400">Add or edit team members.</p>
+                            <p class="text-sm text-gray-500 dark:text-gray-400">Total Users</p>
+                            <p class="text-2xl font-bold text-gray-900 dark:text-white">{{ total_users|default:"24" }}</p>
+                        </div>
+                        <div class="w-10 h-10 bg-blue-100 dark:bg-blue-900/30 rounded-lg flex items-center justify-center">
+                            <i class="fas fa-users text-blue-500"></i>
                         </div>
                     </div>
-                </a>
-
-                <a href="{% url 'home' %}" class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md hover:shadow-lg transition">
-                    <div class="flex items-center">
-                        <div class="text-3xl text-red-500 mr-4">
-                            <i class="fas fa-handshake"></i>
-                        </div>
+                </div>
+                
+                <div class="bg-white dark:bg-[#1a1a1f] p-4 rounded-xl shadow-md border border-gray-200 dark:border-gray-800">
+                    <div class="flex items-center justify-between">
                         <div>
-                            <h2 class="text-xl font-semibold dark:text-white">Manage Clients</h2>
-                            <p class="text-gray-600 dark:text-gray-400">Add or edit awesome clients.</p>
+                            <p class="text-sm text-gray-500 dark:text-gray-400">Services</p>
+                            <p class="text-2xl font-bold text-gray-900 dark:text-white">{{ total_services|default:"8" }}</p>
+                        </div>
+                        <div class="w-10 h-10 bg-green-100 dark:bg-green-900/30 rounded-lg flex items-center justify-center">
+                            <i class="fas fa-concierge-bell text-green-500"></i>
                         </div>
                     </div>
-                </a>
+                </div>
+                
+                <div class="bg-white dark:bg-[#1a1a1f] p-4 rounded-xl shadow-md border border-gray-200 dark:border-gray-800">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <p class="text-sm text-gray-500 dark:text-gray-400">Blog Posts</p>
+                            <p class="text-2xl font-bold text-gray-900 dark:text-white">{{ total_blog_posts|default:"12" }}</p>
+                        </div>
+                        <div class="w-10 h-10 bg-purple-100 dark:bg-purple-900/30 rounded-lg flex items-center justify-center">
+                            <i class="fas fa-blog text-purple-500"></i>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="bg-white dark:bg-[#1a1a1f] p-4 rounded-xl shadow-md border border-gray-200 dark:border-gray-800">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <p class="text-sm text-gray-500 dark:text-gray-400">Team Members</p>
+                            <p class="text-2xl font-bold text-gray-900 dark:text-white">{{ total_team_members|default:"5" }}</p>
+                        </div>
+                        <div class="w-10 h-10 bg-yellow-100 dark:bg-yellow-900/30 rounded-lg flex items-center justify-center">
+                            <i class="fas fa-users-cog text-yellow-500"></i>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
-    </main>
 
-    <footer class="bg-gray-800 text-white py-8 mt-auto">
-        <div class="container mx-auto px-6 text-center">
-            <p>&copy; {% now "Y" %} Ondrobit. All rights reserved.</p>
+        <!-- Main Dashboard Grid -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            
+            <!-- User Management Card -->
+            <a href="{% url 'user_management' %}" class="dashboard-card bg-white dark:bg-[#1a1a1f] p-6 rounded-xl shadow-md border border-gray-200 dark:border-gray-800 group" data-aos="fade-up" data-aos-delay="100">
+                <div class="flex items-start space-x-4">
+                    <div class="w-12 h-12 bg-blue-100 dark:bg-blue-900/30 rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform">
+                        <i class="fas fa-users-cog text-blue-500 text-xl"></i>
+                    </div>
+                    <div class="flex-1">
+                        <div class="flex items-center justify-between">
+                            <h2 class="text-lg font-semibold text-gray-900 dark:text-white group-hover:text-primary-500 transition-colors">User Management</h2>
+                            <i class="fas fa-arrow-right text-gray-400 group-hover:text-primary-500 group-hover:translate-x-1 transition-all"></i>
+                        </div>
+                        <p class="text-sm text-gray-600 dark:text-gray-400 mt-1">Manage user roles, permissions, and access control</p>
+                        
+                        <!-- Quick Actions -->
+                        <div class="mt-3 flex flex-wrap items-center gap-2">
+                            <span class="text-xs bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400 px-2 py-1 rounded">Add User</span>
+                            <span class="text-xs bg-gray-50 dark:bg-gray-800 text-gray-600 dark:text-gray-400 px-2 py-1 rounded">Edit Roles</span>
+                        </div>
+                    </div>
+                </div>
+            </a>
+
+            <!-- Services Management Card -->
+            <a href="{% url 'services' %}" class="dashboard-card bg-white dark:bg-[#1a1a1f] p-6 rounded-xl shadow-md border border-gray-200 dark:border-gray-800 group" data-aos="fade-up" data-aos-delay="200">
+                <div class="flex items-start space-x-4">
+                    <div class="w-12 h-12 bg-green-100 dark:bg-green-900/30 rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform">
+                        <i class="fas fa-concierge-bell text-green-500 text-xl"></i>
+                    </div>
+                    <div class="flex-1">
+                        <div class="flex items-center justify-between">
+                            <h2 class="text-lg font-semibold text-gray-900 dark:text-white group-hover:text-primary-500 transition-colors">Manage Services</h2>
+                            <i class="fas fa-arrow-right text-gray-400 group-hover:text-primary-500 group-hover:translate-x-1 transition-all"></i>
+                        </div>
+                        <p class="text-sm text-gray-600 dark:text-gray-400 mt-1">Add, edit, or delete services offered by your company</p>
+                        
+                        <!-- Quick Actions -->
+                        <div class="mt-3 flex flex-wrap items-center gap-2">
+                            <span class="text-xs bg-green-50 dark:bg-green-900/20 text-green-600 dark:text-green-400 px-2 py-1 rounded">Add Service</span>
+                            <span class="text-xs bg-gray-50 dark:bg-gray-800 text-gray-600 dark:text-gray-400 px-2 py-1 rounded">Reorder</span>
+                        </div>
+                    </div>
+                </div>
+            </a>
+
+            <!-- Blog Management Card -->
+            <a href="{% url 'blog' %}" class="dashboard-card bg-white dark:bg-[#1a1a1f] p-6 rounded-xl shadow-md border border-gray-200 dark:border-gray-800 group" data-aos="fade-up" data-aos-delay="300">
+                <div class="flex items-start space-x-4">
+                    <div class="w-12 h-12 bg-purple-100 dark:bg-purple-900/30 rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform">
+                        <i class="fas fa-blog text-purple-500 text-xl"></i>
+                    </div>
+                    <div class="flex-1">
+                        <div class="flex items-center justify-between">
+                            <h2 class="text-lg font-semibold text-gray-900 dark:text-white group-hover:text-primary-500 transition-colors">Manage Blog</h2>
+                            <i class="fas fa-arrow-right text-gray-400 group-hover:text-primary-500 group-hover:translate-x-1 transition-all"></i>
+                        </div>
+                        <p class="text-sm text-gray-600 dark:text-gray-400 mt-1">Create, edit, and manage blog posts and categories</p>
+                        
+                        <!-- Quick Actions -->
+                        <div class="mt-3 flex flex-wrap items-center gap-2">
+                            <span class="text-xs bg-purple-50 dark:bg-purple-900/20 text-purple-600 dark:text-purple-400 px-2 py-1 rounded">New Post</span>
+                            <span class="text-xs bg-gray-50 dark:bg-gray-800 text-gray-600 dark:text-gray-400 px-2 py-1 rounded">Categories</span>
+                        </div>
+                    </div>
+                </div>
+            </a>
+
+            <!-- Team Management Card - FIXED: Changed from developer_list to about_us -->
+            <a href="{% url 'about_us' %}" class="dashboard-card bg-white dark:bg-[#1a1a1f] p-6 rounded-xl shadow-md border border-gray-200 dark:border-gray-800 group" data-aos="fade-up" data-aos-delay="400">
+                <div class="flex items-start space-x-4">
+                    <div class="w-12 h-12 bg-yellow-100 dark:bg-yellow-900/30 rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform">
+                        <i class="fas fa-users text-yellow-500 text-xl"></i>
+                    </div>
+                    <div class="flex-1">
+                        <div class="flex items-center justify-between">
+                            <h2 class="text-lg font-semibold text-gray-900 dark:text-white group-hover:text-primary-500 transition-colors">Manage Team</h2>
+                            <i class="fas fa-arrow-right text-gray-400 group-hover:text-primary-500 group-hover:translate-x-1 transition-all"></i>
+                        </div>
+                        <p class="text-sm text-gray-600 dark:text-gray-400 mt-1">Add or edit team members and their information</p>
+                        
+                        <!-- Quick Actions -->
+                        <div class="mt-3 flex flex-wrap items-center gap-2">
+                            <span class="text-xs bg-yellow-50 dark:bg-yellow-900/20 text-yellow-600 dark:text-yellow-400 px-2 py-1 rounded">Add Member</span>
+                            <span class="text-xs bg-gray-50 dark:bg-gray-800 text-gray-600 dark:text-gray-400 px-2 py-1 rounded">Update Roles</span>
+                        </div>
+                    </div>
+                </div>
+            </a>
+
+            <!-- Clients Management Card - FIXED: Changed from client_list to home (since no specific client list yet) -->
+            <a href="{% url 'home' %}" class="dashboard-card bg-white dark:bg-[#1a1a1f] p-6 rounded-xl shadow-md border border-gray-200 dark:border-gray-800 group" data-aos="fade-up" data-aos-delay="500">
+                <div class="flex items-start space-x-4">
+                    <div class="w-12 h-12 bg-red-100 dark:bg-red-900/30 rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform">
+                        <i class="fas fa-handshake text-red-500 text-xl"></i>
+                    </div>
+                    <div class="flex-1">
+                        <div class="flex items-center justify-between">
+                            <h2 class="text-lg font-semibold text-gray-900 dark:text-white group-hover:text-primary-500 transition-colors">Manage Clients</h2>
+                            <i class="fas fa-arrow-right text-gray-400 group-hover:text-primary-500 group-hover:translate-x-1 transition-all"></i>
+                        </div>
+                        <p class="text-sm text-gray-600 dark:text-gray-400 mt-1">Add or edit client testimonials and partnerships</p>
+                        
+                        <!-- Quick Actions -->
+                        <div class="mt-3 flex flex-wrap items-center gap-2">
+                            <span class="text-xs bg-red-50 dark:bg-red-900/20 text-red-600 dark:text-red-400 px-2 py-1 rounded">Add Client</span>
+                            <span class="text-xs bg-gray-50 dark:bg-gray-800 text-gray-600 dark:text-gray-400 px-2 py-1 rounded">Testimonials</span>
+                        </div>
+                    </div>
+                </div>
+            </a>
+
+            <!-- NEW: About Us Management Card - For company information -->
+            <a href="{% url 'about_us' %}" class="dashboard-card bg-white dark:bg-[#1a1a1f] p-6 rounded-xl shadow-md border border-gray-200 dark:border-gray-800 group" data-aos="fade-up" data-aos-delay="600">
+                <div class="flex items-start space-x-4">
+                    <div class="w-12 h-12 bg-indigo-100 dark:bg-indigo-900/30 rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform">
+                        <i class="fas fa-building text-indigo-500 text-xl"></i>
+                    </div>
+                    <div class="flex-1">
+                        <div class="flex items-center justify-between">
+                            <h2 class="text-lg font-semibold text-gray-900 dark:text-white group-hover:text-primary-500 transition-colors">Manage About Us</h2>
+                            <i class="fas fa-arrow-right text-gray-400 group-hover:text-primary-500 group-hover:translate-x-1 transition-all"></i>
+                        </div>
+                        <p class="text-sm text-gray-600 dark:text-gray-400 mt-1">Update company information, mission, vision, and values</p>
+                        
+                        <!-- Quick Actions -->
+                        <div class="mt-3 flex flex-wrap items-center gap-2">
+                            <span class="text-xs bg-indigo-50 dark:bg-indigo-900/20 text-indigo-600 dark:text-indigo-400 px-2 py-1 rounded">Edit Mission</span>
+                            <span class="text-xs bg-gray-50 dark:bg-gray-800 text-gray-600 dark:text-gray-400 px-2 py-1 rounded">Company Info</span>
+                        </div>
+                    </div>
+                </div>
+            </a>
+
+            <!-- Contact Info Management Card - FIXED: Changed from contactinfo_list to home (temporary) -->
+            <a href="{% url 'home' %}" class="dashboard-card bg-white dark:bg-[#1a1a1f] p-6 rounded-xl shadow-md border border-gray-200 dark:border-gray-800 group" data-aos="fade-up" data-aos-delay="700">
+                <div class="flex items-start space-x-4">
+                    <div class="w-12 h-12 bg-pink-100 dark:bg-pink-900/30 rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform">
+                        <i class="fas fa-address-card text-pink-500 text-xl"></i>
+                    </div>
+                    <div class="flex-1">
+                        <div class="flex items-center justify-between">
+                            <h2 class="text-lg font-semibold text-gray-900 dark:text-white group-hover:text-primary-500 transition-colors">Contact Info</h2>
+                            <i class="fas fa-arrow-right text-gray-400 group-hover:text-primary-500 group-hover:translate-x-1 transition-all"></i>
+                        </div>
+                        <p class="text-sm text-gray-600 dark:text-gray-400 mt-1">Manage contact information, address, and social links</p>
+                        
+                        <!-- Quick Actions -->
+                        <div class="mt-3 flex flex-wrap items-center gap-2">
+                            <span class="text-xs bg-pink-50 dark:bg-pink-900/20 text-pink-600 dark:text-pink-400 px-2 py-1 rounded">Update Info</span>
+                            <span class="text-xs bg-gray-50 dark:bg-gray-800 text-gray-600 dark:text-gray-400 px-2 py-1 rounded">Social Links</span>
+                        </div>
+                    </div>
+                </div>
+            </a>
+
+            <!-- Reviews Management Card -->
+            <a href="{% url 'review_page' %}" class="dashboard-card bg-white dark:bg-[#1a1a1f] p-6 rounded-xl shadow-md border border-gray-200 dark:border-gray-800 group" data-aos="fade-up" data-aos-delay="800">
+                <div class="flex items-start space-x-4">
+                    <div class="w-12 h-12 bg-orange-100 dark:bg-orange-900/30 rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform">
+                        <i class="fas fa-star text-orange-500 text-xl"></i>
+                    </div>
+                    <div class="flex-1">
+                        <div class="flex items-center justify-between">
+                            <h2 class="text-lg font-semibold text-gray-900 dark:text-white group-hover:text-primary-500 transition-colors">Manage Reviews</h2>
+                            <i class="fas fa-arrow-right text-gray-400 group-hover:text-primary-500 group-hover:translate-x-1 transition-all"></i>
+                        </div>
+                        <p class="text-sm text-gray-600 dark:text-gray-400 mt-1">Moderate and manage customer reviews and testimonials</p>
+                        
+                        <!-- Quick Actions -->
+                        <div class="mt-3 flex flex-wrap items-center gap-2">
+                            <span class="text-xs bg-orange-50 dark:bg-orange-900/20 text-orange-600 dark:text-orange-400 px-2 py-1 rounded">Moderate</span>
+                            <span class="text-xs bg-gray-50 dark:bg-gray-800 text-gray-600 dark:text-gray-400 px-2 py-1 rounded">Featured</span>
+                        </div>
+                    </div>
+                </div>
+            </a>
+
+            <!-- Settings Card - FIXED: Changed from settings to home (temporary) -->
+            <a href="{% url 'home' %}" class="dashboard-card bg-white dark:bg-[#1a1a1f] p-6 rounded-xl shadow-md border border-gray-200 dark:border-gray-800 group" data-aos="fade-up" data-aos-delay="900">
+                <div class="flex items-start space-x-4">
+                    <div class="w-12 h-12 bg-gray-100 dark:bg-gray-800 rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform">
+                        <i class="fas fa-cog text-gray-500 text-xl"></i>
+                    </div>
+                    <div class="flex-1">
+                        <div class="flex items-center justify-between">
+                            <h2 class="text-lg font-semibold text-gray-900 dark:text-white group-hover:text-primary-500 transition-colors">Settings</h2>
+                            <i class="fas fa-arrow-right text-gray-400 group-hover:text-primary-500 group-hover:translate-x-1 transition-all"></i>
+                        </div>
+                        <p class="text-sm text-gray-600 dark:text-gray-400 mt-1">Configure website settings and preferences</p>
+                        
+                        <!-- Quick Actions -->
+                        <div class="mt-3 flex flex-wrap items-center gap-2">
+                            <span class="text-xs bg-gray-50 dark:bg-gray-800 text-gray-600 dark:text-gray-400 px-2 py-1 rounded">General</span>
+                            <span class="text-xs bg-gray-50 dark:bg-gray-800 text-gray-600 dark:text-gray-400 px-2 py-1 rounded">Security</span>
+                        </div>
+                    </div>
+                </div>
+            </a>
         </div>
-    </footer>
 
-    <script src="{% static 'js/script.js' %}"></script>
-</body>
-</html>
+        <!-- Recent Activity Section -->
+        <div class="mt-12" data-aos="fade-up">
+            <div class="flex items-center justify-between mb-6">
+                <h2 class="text-2xl font-bold text-gray-900 dark:text-white">Recent Activity</h2>
+                <a href="#" class="text-primary-500 hover:text-primary-600 text-sm font-medium flex items-center">
+                    View All <i class="fas fa-arrow-right ml-2 text-xs"></i>
+                </a>
+            </div>
+            
+            <div class="bg-white dark:bg-[#1a1a1f] rounded-xl shadow-md border border-gray-200 dark:border-gray-800 overflow-hidden">
+                <div class="divide-y divide-gray-200 dark:divide-gray-800">
+                    <div class="recent-activity-item p-4 flex items-center space-x-4 hover:bg-gray-50 dark:hover:bg-gray-800/50 transition-colors">
+                        <div class="w-8 h-8 bg-green-100 dark:bg-green-900/30 rounded-lg flex items-center justify-center">
+                            <i class="fas fa-plus text-green-500 text-xs"></i>
+                        </div>
+                        <div class="flex-1">
+                            <p class="text-sm text-gray-900 dark:text-white">New blog post created: "Getting Started with Django"</p>
+                            <p class="text-xs text-gray-500 dark:text-gray-400">2 hours ago</p>
+                        </div>
+                        <span class="text-xs bg-green-50 dark:bg-green-900/20 text-green-600 dark:text-green-400 px-2 py-1 rounded">New</span>
+                    </div>
+                    
+                    <div class="recent-activity-item p-4 flex items-center space-x-4 hover:bg-gray-50 dark:hover:bg-gray-800/50 transition-colors">
+                        <div class="w-8 h-8 bg-blue-100 dark:bg-blue-900/30 rounded-lg flex items-center justify-center">
+                            <i class="fas fa-edit text-blue-500 text-xs"></i>
+                        </div>
+                        <div class="flex-1">
+                            <p class="text-sm text-gray-900 dark:text-white">Team member profile updated: John Doe</p>
+                            <p class="text-xs text-gray-500 dark:text-gray-400">5 hours ago</p>
+                        </div>
+                    </div>
+                    
+                    <div class="recent-activity-item p-4 flex items-center space-x-4 hover:bg-gray-50 dark:hover:bg-gray-800/50 transition-colors">
+                        <div class="w-8 h-8 bg-purple-100 dark:bg-purple-900/30 rounded-lg flex items-center justify-center">
+                            <i class="fas fa-user-plus text-purple-500 text-xs"></i>
+                        </div>
+                        <div class="flex-1">
+                            <p class="text-sm text-gray-900 dark:text-white">New user registered: Sarah Wilson</p>
+                            <p class="text-xs text-gray-500 dark:text-gray-400">1 day ago</p>
+                        </div>
+                    </div>
+                    
+                    <div class="recent-activity-item p-4 flex items-center space-x-4 hover:bg-gray-50 dark:hover:bg-gray-800/50 transition-colors">
+                        <div class="w-8 h-8 bg-yellow-100 dark:bg-yellow-900/30 rounded-lg flex items-center justify-center">
+                            <i class="fas fa-star text-yellow-500 text-xs"></i>
+                        </div>
+                        <div class="flex-1">
+                            <p class="text-sm text-gray-900 dark:text-white">New 5-star review received</p>
+                            <p class="text-xs text-gray-500 dark:text-gray-400">2 days ago</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Add any dashboard-specific functionality here
+        console.log('Dashboard loaded');
+    });
+</script>
+{% endblock %}

@@ -63,7 +63,6 @@
         </div>
     </div>
 </section>
-
 <!-- Team Section -->
 <section class="py-20 bg-gray-50 dark:bg-gray-900 overflow-hidden">
     <div class="container mx-auto px-4">
@@ -103,11 +102,24 @@
                     {{ dev.bio|safe|truncatewords:30 }}
                 </div>
 
-                <div class="flex justify-center space-x-4 pt-4 border-t border-gray-200 dark:border-gray-700">
-                    {% if dev.cv_url %}
-                    <a href="{{ dev.cv_url }}" target="_blank" class="text-primary-500 hover:text-primary-600 font-semibold text-sm flex items-center group/link">
-                        View LinkedIn Profile<i class="fas fa-external-link-alt ml-2 text-xs group-hover/link:translate-x-1 transition-transform"></i>
+                <!-- LinkedIn Profile Link Section -->
+                <div class="flex flex-wrap justify-center gap-3 pt-4 border-t border-gray-200 dark:border-gray-700">
+                    
+                    <!-- LinkedIn Profile Link - Using correct field name linked_in_url -->
+                    {% if dev.linked_in_url %}
+                    <a href="{{ dev.linked_in_url }}" target="_blank" 
+                       class="inline-flex items-center gap-2 px-4 py-2 bg-[#0077b5] hover:bg-[#005e93] text-white font-semibold text-sm rounded-lg transition-all duration-300 transform hover:scale-105 hover:shadow-lg group/link">
+                        <i class="fab fa-linkedin text-base"></i>
+                        <span>LinkedIn Profile</span>
+                        <i class="fas fa-external-link-alt text-xs ml-1 opacity-70 group-hover/link:translate-x-1 transition-transform"></i>
                     </a>
+                    
+                    <!-- Show message when no LinkedIn URL is provided -->
+                    {% else %}
+                    <div class="text-gray-400 dark:text-gray-500 text-sm italic flex items-center gap-2 px-4 py-2 bg-gray-100 dark:bg-gray-700/50 rounded-lg">
+                        <i class="fas fa-user-slash"></i>
+                        <span>No LinkedIn profile</span>
+                    </div>
                     {% endif %}
                 </div>
 
